@@ -1,0 +1,12 @@
+/* latest.css - Member 3: "Latest internships" on home.html and index.html */
+#latest-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;margin:1rem 0}
+.latest-card{display:flex;flex-direction:column;gap:.35rem;padding:1rem;border:1px solid #d9d9d9;border-radius:8px;background:#fff}
+.latest-logo{width:48px;height:48px;object-fit:contain;border-radius:6px}
+.latest-card h3{margin:.25rem 0 0;font-size:1.05rem}
+.latest-company{margin:0;font-weight:600}
+.latest-location{margin:0;color:#595959;font-size:.9rem}
+.latest-apply{margin-top:auto;padding-top:.5rem;font-weight:600}
+.latest-msg{grid-column:1/-1;padding:1rem;border:1px dashed #bfbfbf;border-radius:8px;color:#595959;text-align:center}
+.latest-error{border-color:#c0392b;color:#c0392b}
+.latest-retry{padding:.4rem .9rem;border:1.5px solid #1f3864;border-radius:6px;background:#fff;color:#1f3864;font-weight:600;cursor:pointer}
+.latest-source{margin:.25rem 0 1rem;color:#595959;font-size:.85rem}
