@@ -704,10 +704,15 @@ function closeModal() {
     });
 
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    nav.querySelectorAll('a').forEach(function (link) {
-        if (link.getAttribute('href') === currentPage) {
+    const activePage = currentPage === 'index.html' ? 'home.html' : currentPage;
+    const navLinks = Array.from(nav.querySelectorAll('a'));
+
+    navLinks.forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === activePage);
+        link.addEventListener('click', function () {
+            navLinks.forEach(item => item.classList.remove('active'));
             link.classList.add('active');
-        }
+        });
     });
 })();
 

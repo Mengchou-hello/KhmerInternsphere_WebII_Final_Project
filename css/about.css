@@ -343,3 +343,103 @@ footer {
     font-size: 1rem;
     opacity: 0.9;
 }
+
+.values {
+    position: relative;
+    overflow: hidden;
+    margin: 56px 0;
+    padding: clamp(56px, 8vw, 88px) 0;
+    background:
+        radial-gradient(circle at 10% 15%, rgba(57, 63, 134, 0.14), transparent 24rem),
+        radial-gradient(circle at 88% 80%, rgba(202, 220, 252, 0.85), transparent 20rem),
+        var(--gray-light);
+}
+
+.value-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 230px;
+    padding: 32px;
+    text-align: left;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.value-card:hover,
+.team-card:hover {
+    border-color: var(--blue-accent);
+    box-shadow: var(--shadow-lg);
+}
+
+.value-card::after {
+    content: "";
+    position: absolute;
+    right: -28px;
+    bottom: -34px;
+    width: 118px;
+    height: 118px;
+    border: 20px solid rgba(57, 63, 134, 0.06);
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.value-card:hover::after { transform: scale(1.15); }
+
+.value-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin-bottom: 28px;
+    border-radius: 12px;
+    background: var(--blue-xpale);
+    color: var(--blue-accent);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.team {
+    position: relative;
+    padding: clamp(56px, 8vw, 88px) 0;
+    background: var(--white);
+}
+
+.team-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 190px;
+    padding: 32px 24px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.team-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--blue-dark), var(--blue-accent));
+}
+
+.team-initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(57, 63, 134, 0.2);
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-xpale), var(--blue-pale));
+    color: var(--blue-dark);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+@media (max-width: 760px) {
+    .value-card { min-height: auto; }
+}
