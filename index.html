@@ -7,6 +7,7 @@
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="./css/home.css" />
     <link rel="stylesheet" href="./css/nav.css" />
+    <link rel="stylesheet" href="./css/latest.css" />
   </head>
 
   <body>
@@ -159,31 +160,13 @@
         </div>
       </section>
 
-      <section class="internships">
+      <section class="internships latest" id="latest">
         <div class="container">
-          <h2 class="section-title">Featured Internships</h2>
-          <div class="card-grid">
-            <div class="intern-card">
-              <h3>Marketing Intern</h3>
-              <p class="meta">Phnom Penh &bull; 3 Months</p>
-              <p>Assist in digital campaigns and social media management.</p>
-              <a href="#">Apply Now &rarr;</a>
-            </div>
-
-            <div class="intern-card">
-              <h3>Software Developer Intern</h3>
-              <p class="meta">Remote &bull; 6 Months</p>
-              <p>Build real applications with experienced developers.</p>
-              <a href="#">Apply Now &rarr;</a>
-            </div>
-
-            <div class="intern-card">
-              <h3>Finance Intern</h3>
-              <p class="meta">Phnom Penh &bull; 4 Months</p>
-              <p>Support financial reporting and analysis tasks.</p>
-              <a href="#">Apply Now &rarr;</a>
-            </div>
+          <div class="latest-head">
+            <h2 class="section-title">Latest Internships</h2>
+            <a href="internships.html" class="latest-link">View all &rarr;</a>
           </div>
+          <div id="latest-list" class="latest-list"></div>
         </div>
       </section>
     </main>
@@ -199,6 +182,9 @@
         &copy; 2026 Khmer InternSphere. All rights reserved.
       </p>
     </footer>
+    <script src="js/config.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/latest.js"></script>
   </body>
-  <script src="./js/main.js"></script>
 </html>
