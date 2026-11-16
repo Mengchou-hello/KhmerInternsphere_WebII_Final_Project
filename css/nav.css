@@ -1,3 +1,6 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap");
+
 /* ============================================================
    nav.css - Khmer InternSphere (header + navigation, Member 3)
    The SAME header/nav markup and this file are used on all pages.
@@ -301,6 +304,1827 @@ nav a.active::after {
 }
 
 @keyframes navSlideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Features (was features.css) ===== */
+/* Adds shared card and interaction enhancements. */
+/* Shared styles for the live listing, company, modal, and validation features. */
+.listing-controls { display: grid; grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(150px, 1fr)) auto; gap: 12px; align-items: end; margin: 32px 0 14px; }
+.listing-controls label { display: grid; gap: 5px; color: #18235f; font-weight: 700; font-size: .84rem; }
+.listing-controls input, .listing-controls select { min-height: 42px; padding: 9px 12px; border: 1px solid #c5cde8; border-radius: 9px; background: #fff; color: #172554; font: inherit; }
+.listing-clear, .listing-state button, .company-state button { min-height: 42px; padding: 9px 16px; border: 0; border-radius: 9px; background: #111154; color: #fff; cursor: pointer; font: inherit; font-weight: 700; }
+.results-count { color: #4a5068; margin: 0 0 18px; }
+.listing-state, .company-state { margin: 24px 0; padding: 28px; border-radius: 12px; background: #eef2ff; color: #172554; text-align: center; }
+.listing-state--error, .company-state--error { background: #fff1f2; color: #9f1239; }
+.listing-spinner { display: inline-block; width: 18px; height: 18px; margin-right: 8px; border: 3px solid #c5cde8; border-top-color: #111154; border-radius: 50%; vertical-align: -4px; animation: kis-spin .8s linear infinite; }
+@keyframes kis-spin { to { transform: rotate(360deg); } }
+.internship-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; margin: 0 0 32px; }
+.internship-card { position: relative; display: flex; min-height: 255px; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid #dbe4ff; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgba(17, 17, 84, .08); cursor: pointer; transition: transform .2s, box-shadow .2s; }
+.internship-card:hover, .internship-card:focus { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(17, 17, 84, .16); outline: none; }
+.internship-card__top { display: flex; gap: 12px; align-items: flex-start; }
+.internship-card__logo { width: 46px; height: 46px; flex: 0 0 auto; object-fit: contain; border: 1px solid #e5e7eb; border-radius: 10px; }
+.internship-card h3 { margin: 2px 0 0; color: #111154; font-size: 1.05rem; line-height: 1.3; }
+.internship-card__company { margin: 0; color: #4a5068; font-size: .86rem; }
+.internship-card__description { margin: 0; color: #334155; font-size: .9rem; }
+.internship-card__meta { display: flex; flex-wrap: wrap; gap: 7px; }
+.internship-card__meta span { padding: 4px 8px; border-radius: 20px; background: #eef2ff; color: #293b82; font-size: .76rem; }
+.internship-card footer { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-top: auto; color: #64748b; font-size: .76rem; }
+.card-details { color: #111154; font-weight: 700; }
+.save-btn { align-self: flex-start; padding: 7px 12px; border: 1px solid #111154; border-radius: 8px; background: #fff; color: #111154; cursor: pointer; font-weight: 700; }
+.save-btn.is-saved { background: #111154; color: #fff; }
+.save-btn:disabled { opacity: .6; cursor: progress; }
+
+/* Shared overlay (internship + company modals) */
+.internship-modal, .company-detail-modal { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(8, 8, 56, .65); }
+.internship-modal.is-open { display: flex; }
+.internship-modal__close, .company-detail-modal__close { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #eef2ff; color: #111154; cursor: pointer; font-size: 1.5rem; }
+
+/* Company detail modal (companies page) */
+.company-detail-modal > section { position: relative; width: min(760px, 100%); max-height: min(760px, calc(100vh - 40px)); overflow: auto; padding: 28px; border-radius: 16px; background: #fff; color: #172554; }
+.company-detail-modal header { display: flex; gap: 16px; align-items: center; padding-right: 34px; }
+.company-detail-modal header img { width: 62px; height: 62px; object-fit: contain; border: 1px solid #e5e7eb; border-radius: 12px; }
+.company-detail-modal header p { margin: 0; color: #4a5068; }
+.company-detail-modal h2 { margin: 4px 0; color: #111154; }
+.company-job-list a { display: inline-block; padding: 8px 13px; border-radius: 8px; background: #111154; color: #fff; text-decoration: none; font-weight: 700; }
+.live-company-card { display: flex; gap: 15px; align-items: center; padding: 18px; border: 1px solid #dbe4ff; border-radius: 14px; background: #fff; cursor: pointer; box-shadow: 0 6px 18px rgba(17, 17, 84, .07); }
+.live-company-card:hover, .live-company-card:focus { border-color: #111154; outline: none; }
+.live-company-card img { width: 52px; height: 52px; object-fit: contain; border: 1px solid #e5e7eb; border-radius: 10px; }
+.live-company-card h2 { margin: 0; font-size: 1rem; color: #111154; }.live-company-card p { margin: 4px 0 0; color: #4a5068; font-size: .85rem; }.live-company-card > span { margin-left: auto; color: #111154; font-size: 2rem; }
+.company-detail-modal { display: flex; }.company-job-list { display: grid; gap: 12px; margin-top: 22px; }.company-job-list article { padding: 16px; border: 1px solid #dbe4ff; border-radius: 10px; }.company-job-list h3, .company-job-list p { margin: 0 0 8px; }.company-job-list p { color: #4a5068; }
+.field-error { margin: 5px 0 0; color: #b91c1c; font-size: .82rem; }.has-error { border-color: #b91c1c !important; }.contact-success { margin: 14px 0; color: #166534; font-weight: 700; }
+@media (max-width: 720px) { .listing-controls { grid-template-columns: 1fr; }.company-detail-modal > section { padding: 22px 16px; } }
+
+
+/* ============================================================
+   INTERNSHIP DETAIL MODAL  ("View details")
+   Built by js/detail-map.js.
+   NOTE: the modal uses <div>s on purpose. The site-wide
+   `header { ... }` and `footer { ... }` rules (nav.css / the page
+   CSS) would otherwise turn the modal's title area and button row
+   into dark navy bars.
+   ============================================================ */
+.internship-modal {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  background: rgba(8, 8, 56, .62);
+}
+
+.internship-modal.is-open .internship-modal__dialog {
+  animation: kis-modal-in .22s ease-out;
+}
+
+@keyframes kis-modal-in {
+  from { opacity: 0; transform: translateY(14px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+
+.internship-modal__dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(760px, 100%);
+  max-height: min(780px, calc(100vh - 40px));
+  max-height: min(780px, calc(100dvh - 40px));
+  padding: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #fff;
+  color: #172554;
+  box-shadow: 0 30px 80px rgba(8, 8, 56, .35);
+}
+
+.internship-modal__dialog .internship-modal__close {
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid #dbe4ff;
+  background: rgba(255, 255, 255, .92);
+  color: #111154;
+  font-size: 1.5rem;
+  line-height: 1;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.internship-modal__dialog .internship-modal__close:hover {
+  border-color: #111154;
+  background: #111154;
+  color: #fff;
+}
+
+#internship-modal-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ---- Title area ---- */
+.detail-hero {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 28px 70px 24px 28px;
+  border-bottom: 1px solid #e3e8fb;
+  background: linear-gradient(135deg, #f6f8ff 0%, #e9efff 100%);
+}
+
+.detail-logo {
+  flex: none;
+  width: 68px;
+  height: 68px;
+  padding: 8px;
+  object-fit: contain;
+  border: 1px solid #dbe4ff;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(17, 17, 84, .08);
+}
+
+.detail-logo--initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: linear-gradient(135deg, #111154, #393f86);
+  color: #fff;
+  font-size: 1.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.detail-hero__text { min-width: 0; }
+
+.detail-company {
+  margin: 0 0 4px;
+  color: #393f86;
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.detail-company:empty { display: none; }
+
+.detail-title {
+  margin: 0;
+  color: #111154;
+  font-size: clamp(1.25rem, 2.6vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Scrolling body ---- */
+.detail-body {
+  flex: 1;
+  min-height: 0;
+  padding: 24px 28px 28px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.detail-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 28px;
+}
+
+.detail-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid #e3e8fb;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.detail-fact dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: #6b7390;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.detail-fact dt .detail-icon { color: #393f86; }
+
+.detail-fact dd {
+  margin: 0;
+  color: #111154;
+  font-size: .95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.detail-icon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.detail-section + .detail-section { margin-top: 28px; }
+
+.detail-section__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  color: #393f86;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.detail-section__title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e3e8fb;
+}
+
+/* ---- Description (rich text) ---- */
+.detail-description {
+  color: #334155;
+  font-size: .98rem;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.detail-description > * + * { margin-top: 12px; }
+
+.detail-description h4 {
+  margin-top: 22px;
+  color: #111154;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.detail-description ul,
+.detail-description ol {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.detail-description li { position: relative; padding-left: 22px; }
+.detail-description li > p { margin: 0; }
+.detail-description li > p + p { margin-top: 6px; }
+
+.detail-description ul > li::before {
+  content: "";
+  position: absolute;
+  top: .72em;
+  left: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #393f86;
+}
+
+.detail-description ol { counter-reset: kis-step; }
+.detail-description ol > li { padding-left: 28px; counter-increment: kis-step; }
+
+.detail-description ol > li::before {
+  content: counter(kis-step) ".";
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #393f86;
+  font-weight: 700;
+}
+
+.detail-description a { color: #393f86; text-underline-offset: 3px; }
+.detail-description a:hover { color: #111154; }
+
+.detail-description blockquote {
+  padding: 10px 16px;
+  border-left: 3px solid #c5cde8;
+  border-radius: 0 10px 10px 0;
+  background: #f5f7ff;
+}
+
+.detail-description--empty { color: #6b7390; font-style: italic; }
+
+/* ---- Location + map ---- */
+.detail-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 14px;
+  color: #172554;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.detail-location .detail-icon {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: #393f86;
+}
+
+.detail-map {
+  height: 240px;
+  overflow: hidden;
+  border: 1px solid #e3e8fb;
+  border-radius: 14px;
+}
+
+.detail-map-status {
+  margin: 10px 0 0;
+  color: #6b7390;
+  font-size: .84rem;
+}
+
+.detail-map-status:empty { display: none; }
+
+/* ---- Action bar (Save + Apply) ---- */
+.detail-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 28px;
+  border-top: 1px solid #e3e8fb;
+  background: #fff;
+  box-shadow: 0 -8px 24px rgba(17, 17, 84, .05);
+}
+
+.detail-actions #modal-save-slot { display: flex; }
+
+.detail-actions .save-btn,
+.detail-apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  margin: 0;
+  padding: 0 22px;
+  border-radius: 12px;
+  font-size: .95rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, transform .15s ease;
+}
+
+.detail-actions .save-btn {
+  align-self: auto;
+  border: 1.5px solid #c5cde8;
+  background: #fff;
+  color: #111154;
+}
+
+.detail-actions .save-btn:hover:not(:disabled) {
+  border-color: #393f86;
+  background: #f5f7ff;
+}
+
+.detail-actions .save-btn.is-saved {
+  border-color: #393f86;
+  background: #393f86;
+  color: #fff;
+}
+
+.detail-actions .save-btn.is-saved:hover:not(:disabled) {
+  border-color: #111154;
+  background: #111154;
+}
+
+/* bookmark icon (drawn with CSS so the JS can keep rewriting the button text) */
+.detail-actions .save-btn::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.detail-actions .save-btn.is-saved::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z'/%3E%3C/svg%3E");
+}
+
+.detail-apply {
+  border: 1.5px solid transparent;
+  background: linear-gradient(135deg, #111154, #2a2e80);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(17, 17, 84, .22);
+}
+
+.detail-apply:hover {
+  background: linear-gradient(135deg, #1a1a6e, #393f86);
+  box-shadow: 0 10px 22px rgba(17, 17, 84, .28);
+  transform: translateY(-1px);
+}
+
+.detail-apply .detail-icon { width: 16px; height: 16px; }
+
+.internship-modal__close:focus-visible,
+.detail-actions .save-btn:focus-visible,
+.detail-apply:focus-visible {
+  outline: 3px solid rgba(57, 63, 134, .55);
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .internship-modal { padding: 12px; }
+  .internship-modal__dialog { border-radius: 16px; }
+  .detail-hero { gap: 14px; padding: 22px 58px 20px 20px; }
+  .detail-logo { width: 56px; height: 56px; border-radius: 14px; }
+  .detail-logo--initial { font-size: 1.4rem; }
+  .detail-body { padding: 20px; }
+  .detail-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-map { height: 200px; }
+  .detail-actions { gap: 10px; padding: 14px 20px; }
+  .detail-actions .save-btn, .detail-apply { padding: 0 16px; }
+  .detail-apply { flex: 1; }
+  .detail-actions #modal-save-slot { flex: none; }
+  .detail-actions #modal-save-slot:only-child { flex: 1; }
+  .detail-actions #modal-save-slot:only-child .save-btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .internship-modal.is-open .internship-modal__dialog { animation: none; }
+}
+
+/* ===== Theme (was theme.css) ===== */
+/* Defines shared typography and visual-system overrides. */
+/* ============================================================
+   theme.css - Khmer InternSphere  ·  shared visual system
+   Loaded LAST on every page. Keeps the original midnight-blue
+   palette, white minimalist cards, one type family, one radius
+   scale and one button style across all pages.
+   Includes the redesigned header/navigation and footer.
+   ============================================================ */
+
+@font-face { font-family: "Campton"; src: url("../assets/fonts/camptonbook.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Campton"; src: url("../assets/fonts/camptonmedium.otf") format("opentype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Campton"; src: url("../assets/fonts/camptonsemibold.otf") format("opentype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Campton"; src: url("../assets/fonts/camptonbold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* =========================
+   TOKENS (original palette)
+   ========================= */
+:root {
+    --blue-darkest: #080838;
+    --blue-dark: #111154;
+    --blue-mid: #191970;
+    --blue-light: #292c7b;
+    --blue-accent: #393f86;
+    --blue-pale: #cadcfc;
+    --blue-xpale: #eef2ff;
+    --white: #ffffff;
+    --gray-light: #f4f6fb;
+    --gray-border: #c5cde8;
+    --gray-text: #4a5068;
+
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 2px rgba(17, 17, 84, 0.05), 0 4px 14px -8px rgba(17, 17, 84, 0.12);
+    --shadow-md: 0 8px 22px -10px rgba(17, 17, 84, 0.2);
+    --shadow-lg: 0 16px 36px -14px rgba(17, 17, 84, 0.28);
+
+    --font: "Campton", "Campton Book", "Avenir Next", "Segoe UI", "Noto Sans Khmer", "Kantumruy Pro", sans-serif;
+
+    /* small rumdoul flower (Cambodia's national flower), used as a mask for one quiet accent in the footer */
+    --rumdoul: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='none' stroke='black' stroke-width='4' stroke-linejoin='round'><path d='M50 52C35 38 36 13 50 2C64 13 65 38 50 52Z'/><path d='M50 52C35 38 36 13 50 2C64 13 65 38 50 52Z' transform='rotate(120 50 50)'/><path d='M50 52C35 38 36 13 50 2C64 13 65 38 50 52Z' transform='rotate(240 50 50)'/><path d='M50 52C41 43 42 27 50 18C58 27 59 43 50 52Z' transform='rotate(60 50 50)'/><path d='M50 52C41 43 42 27 50 18C58 27 59 43 50 52Z' transform='rotate(180 50 50)'/><path d='M50 52C41 43 42 27 50 18C58 27 59 43 50 52Z' transform='rotate(300 50 50)'/><circle cx='50' cy='50' r='6' fill='black'/></g></svg>");
+}
+
+/* =========================
+   BASE
+   ========================= */
+html { scroll-behavior: smooth; }
+
+*,
+*::before,
+*::after,
+body,
+button,
+input,
+select,
+textarea {
+    font-family: var(--font) !important;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--gray-light);
+    color: var(--blue-darkest);
+}
+
+::selection { background: var(--blue-pale); color: var(--blue-darkest); }
+
+:focus-visible {
+    outline: 3px solid rgba(57, 63, 134, 0.55);
+    outline-offset: 2px;
+}
+
+h1, h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
+
+/* =========================
+   HEADER + NAVIGATION
+   ========================= */
+body > header {
+    padding: 10px clamp(20px, 4vw, 48px);
+    background: var(--blue-dark);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom: 1px solid rgba(202, 220, 252, 0.14);
+    box-shadow: 0 6px 20px -12px rgba(8, 8, 56, 0.6);
+}
+
+body > header .logo img { height: 42px; }
+
+nav a {
+    padding: 9px 16px;
+    border-radius: 999px;
+    color: var(--blue-pale);
+    font-size: 14.5px;
+    font-weight: 500;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+nav a:hover {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+nav a.active {
+    color: var(--white);
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+nav a.active::after,
+#mainNav a.active::after { display: none; }
+
+.apply-now {
+    min-height: 40px;
+    padding: 0 20px;
+    background: var(--white);
+    border: 1px solid var(--white);
+    color: var(--blue-dark);
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: none;
+}
+
+.apply-now:hover {
+    background: var(--blue-pale);
+    border-color: var(--blue-pale);
+    transform: none;
+}
+
+/* Desktop: logo left, menu + Apply button grouped on the right */
+@media (min-width: 769px) {
+    body > header nav {
+        position: static;
+        transform: none;
+        margin-left: auto;
+        margin-right: 14px;
+        gap: 4px;
+    }
+
+    body > header .header-actions { margin-left: 0; }
+}
+
+/* Mobile: full-width dropdown with clear tap targets */
+@media (max-width: 768px) {
+    body > header { padding: 10px 20px !important; }
+
+    #mainNav {
+        padding: 8px 12px 14px;
+        background: var(--blue-dark);
+        border-top: 1px solid rgba(202, 220, 252, 0.14);
+    }
+
+    #mainNav a {
+        padding: 14px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 15.5px !important;
+        font-weight: 500;
+    }
+
+    #mainNav a.active {
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: inset 3px 0 0 var(--blue-pale);
+    }
+
+    .apply-now { min-height: 36px; padding: 0 14px; font-size: 12.5px; }
+}
+
+/* <header>/<footer> tags used inside cards and modals must not inherit site chrome */
+.company-detail-modal header,
+.internship-modal header,
+.internship-card header,
+.latest-card header {
+    position: static;
+    z-index: auto;
+    padding: 0 34px 0 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+.internship-card footer,
+.latest-card footer {
+    margin-top: auto;
+    padding: 12px 0 0;
+    background: none;
+    border-top: 1px solid var(--blue-xpale);
+    text-align: left;
+    color: var(--gray-text);
+}
+
+/* =========================
+   PAGE BANNERS
+   ========================= */
+.page-hero {
+    padding: clamp(48px, 7vw, 76px) 0;
+    background:
+        radial-gradient(700px 220px at 90% 0%, rgba(93, 104, 214, 0.45), transparent 70%),
+        linear-gradient(135deg, var(--blue-darkest), var(--blue-mid));
+    border: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+    color: var(--white);
+    text-align: center;
+}
+
+.page-hero h1,
+.page-hero h2,
+.hero-inner h2 {
+    color: var(--white);
+    font-size: clamp(30px, 4.6vw, 46px);
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.page-hero p,
+.hero-inner p { color: var(--blue-pale); }
+
+.hero-inner p { margin-left: auto; margin-right: auto; }
+
+/* =========================
+   BUTTONS (one style everywhere)
+   ========================= */
+.search-bar button,
+.btn-apply,
+.company-btn,
+.submit-btn,
+.modal-job-apply-btn,
+.thankyou-back-btn,
+.listing-clear,
+.listing-state button,
+.company-state button,
+.latest-retry,
+.detail-apply,
+.company-job-list a {
+    background: var(--blue-dark);
+    border: 1px solid var(--blue-dark);
+    border-radius: 999px;
+    color: var(--white);
+    font-weight: 700;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.search-bar button:hover,
+.btn-apply:hover,
+.company-btn:hover,
+.submit-btn:hover,
+.modal-job-apply-btn:hover,
+.thankyou-back-btn:hover,
+.listing-clear:hover,
+.listing-state button:hover,
+.company-state button:hover,
+.latest-retry:hover,
+.detail-apply:hover,
+.company-job-list a:hover {
+    background: var(--blue-accent);
+    border-color: var(--blue-accent);
+    color: var(--white);
+}
+
+.detail-apply,
+.company-job-list a { padding: 9px 20px; }
+
+.submit-btn { border-radius: var(--radius-sm); }
+
+.save-btn {
+    background: var(--white);
+    border: 1.5px solid var(--blue-accent);
+    border-radius: 999px;
+    color: var(--blue-accent);
+}
+
+.save-btn:hover:not(:disabled) { background: var(--blue-xpale); }
+
+.save-btn.is-saved {
+    background: var(--blue-accent);
+    border-color: var(--blue-accent);
+    color: var(--white);
+}
+
+/* =========================
+   CARDS: plain white, one radius, one shadow
+   ========================= */
+.filter-section,
+.form-card,
+.info-card,
+.company-card,
+.value-card,
+.team-card,
+.benefit-item,
+.latest-card,
+.internship-card,
+.intern-card,
+.live-company-card,
+.stats-banner,
+.saved-panel,
+.listing-controls,
+.cp-section {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.internship-card,
+.latest-card,
+.live-company-card,
+.value-card,
+.team-card,
+.benefit-item,
+.company-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.intern-card:hover,
+.internship-card:hover,
+.internship-card:focus,
+.latest-card:hover,
+.company-card:hover,
+.live-company-card:hover,
+.live-company-card:focus,
+.value-card:hover,
+.team-card:hover,
+.benefit-item:hover {
+    border-color: var(--blue-accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+}
+
+.card-title,
+.company-card h3,
+.value-card h3,
+.team-card h3,
+.form-card h2,
+.info-card h3,
+.internship-card h3,
+.latest-card h3,
+.live-company-card h2 { color: var(--blue-dark); }
+
+.company,
+.desc,
+.location,
+.details,
+.form-group label,
+.contact-item,
+.form-card p,
+.info-card p,
+.internship-card__company,
+.latest-company { color: var(--gray-text); }
+
+.internship-card__logo,
+.latest-logo,
+.live-company-card img,
+.detail-header img,
+.company-detail-modal header img {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius-sm);
+}
+
+/* tags / pills */
+.details span,
+.location-tag,
+.tag,
+.internship-card__meta span,
+.detail-meta span,
+.detail-meta time,
+.latest-location {
+    background: var(--blue-xpale);
+    color: var(--blue-accent);
+    border: 0;
+}
+
+.card-details,
+.latest-apply { color: var(--blue-accent); }
+
+.benefit-item { border-top: 3px solid var(--blue-accent); }
+
+/* state boxes */
+.no-results,
+.latest-msg,
+.listing-state,
+.company-state {
+    background: var(--blue-xpale);
+    border-color: var(--gray-border);
+    color: var(--gray-text);
+}
+
+.listing-state--error,
+.company-state--error,
+.latest-error {
+    background: #fdf3f1;
+    color: #9f1c1c;
+}
+
+/* =========================
+   FILTERS + FORMS
+   ========================= */
+.listing-controls { padding: 18px 20px; }
+.listing-controls label { color: var(--blue-dark); }
+
+.filter-chip {
+    background: var(--blue-xpale);
+    border-color: transparent;
+    color: var(--blue-dark);
+    font-weight: 600;
+}
+
+.filter-chip.active,
+.filter-chip:hover {
+    background: var(--blue-accent);
+    border-color: var(--blue-accent);
+    color: var(--white);
+}
+
+.search-bar { background: var(--white); border-color: var(--gray-border); }
+
+input,
+textarea,
+select {
+    border-color: var(--gray-border) !important;
+    color: var(--blue-darkest);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--blue-accent) !important;
+    box-shadow: 0 0 0 3px rgba(57, 63, 134, 0.16) !important;
+}
+
+.form-card h2,
+.info-card h3 { border-bottom: 2px solid var(--blue-xpale); }
+
+.field-error { color: #b42318; }
+.contact-success { color: #176b3a; }
+
+/* =========================
+   MODALS
+   ========================= */
+.internship-modal,
+.company-detail-modal,
+.modal-overlay,
+.thankyou-overlay {
+    background: rgba(8, 8, 56, 0.62);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.internship-modal__dialog,
+.company-detail-modal > section,
+.thankyou-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 30px 70px -28px rgba(8, 8, 56, 0.6);
+}
+
+.modal-box {
+    background: var(--gray-light);
+    border-radius: var(--radius-lg);
+}
+
+.internship-modal__close,
+.company-detail-modal__close,
+.modal-close {
+    background: var(--blue-xpale);
+    color: var(--blue-dark);
+}
+
+.internship-modal__close:hover,
+.company-detail-modal__close:hover,
+.modal-close:hover {
+    background: var(--blue-dark);
+    color: var(--white);
+}
+
+.detail-header h2,
+.company-detail-modal h2,
+.cp-name-row h2 { color: var(--blue-dark); }
+
+.cp-tab.active { color: var(--blue-dark); border-bottom-color: var(--blue-accent); }
+
+.cp-verified,
+.modal-job-type { background: var(--blue-accent) !important; }
+
+.cp-featured { background: var(--blue-pale); color: var(--blue-dark); }
+
+.cp-recent-job-company { color: var(--blue-accent) !important; }
+
+/* =========================
+   ABOUT / COMPANIES touches
+   ========================= */
+.team-card::before { background: linear-gradient(90deg, var(--blue-dark), var(--blue-accent)); }
+
+.partner-cta {
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--blue-darkest), var(--blue-mid));
+}
+
+.partner-cta .btn-primary {
+    background: var(--white);
+    color: var(--blue-dark);
+    border-radius: 999px;
+}
+
+.impact { background: var(--blue-dark); }
+
+/* =========================
+   FOOTER
+   ========================= */
+.site-footer {
+    background: var(--blue-darkest);
+    border-top: 3px solid var(--blue-accent);
+    color: var(--blue-pale);
+}
+
+.footer-content {
+    max-width: 1180px;
+    padding: 56px 24px 40px;
+    gap: clamp(28px, 5vw, 64px);
+}
+
+.footer-brand p {
+    max-width: 360px;
+    color: rgba(238, 242, 255, 0.78);
+    line-height: 1.7;
+}
+
+.footer-links h2,
+.footer-contact h2 {
+    margin: 0 0 8px;
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.footer-links,
+.footer-contact { gap: 10px; }
+
+.site-footer a {
+    color: rgba(238, 242, 255, 0.78);
+    font-size: 14px;
+    text-decoration: none;
+    background-image: linear-gradient(var(--blue-pale), var(--blue-pale));
+    background-size: 0 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: color 0.2s ease, background-size 0.25s ease;
+}
+
+.site-footer a:hover {
+    color: var(--white);
+    transform: none;
+    background-size: 100% 1px;
+}
+
+.footer-logo,
+.footer-logo:hover { background-image: none; }
+
+.footer-bottom {
+    padding: 18px 24px 22px;
+    border-top: 1px solid rgba(202, 220, 252, 0.16);
+    color: rgba(202, 220, 252, 0.7);
+    font-size: 13px;
+    align-items: center;
+}
+
+/* one quiet Cambodian accent: rumdoul mark beside the tagline */
+.footer-bottom p:last-child::before {
+    content: "";
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    vertical-align: -2px;
+    background: var(--blue-pale);
+    -webkit-mask: var(--rumdoul) center / contain no-repeat;
+    mask: var(--rumdoul) center / contain no-repeat;
+}
+
+@media (max-width: 720px) {
+    .footer-content { padding: 40px 20px 32px; }
+    .footer-bottom { padding: 16px 20px 20px; }
+}
+
+/* =========================
+   RESPONSIVE + ACCESSIBILITY
+   ========================= */
+@media (max-width: 680px) {
+    .filter-section { border-radius: var(--radius); }
+    .search-bar { width: 100%; }
+    .search-bar input { min-width: 0; width: 100%; }
+    .listing-controls { padding: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+   INTERNSHIPS PAGE  (internships.html only)
+   Filter bar, results, internship cards, detail popup.
+   These selectors do not exist on other pages.
+   ============================================================ */
+
+/* page rhythm: left-aligned content, one consistent width */
+main.container {
+    max-width: 1180px;
+    padding: 0 24px;
+    text-align: left;
+}
+
+.results-count {
+    margin: 0 0 18px;
+    color: var(--gray-text);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ---------- filter bar ---------- */
+.listing-controls {
+    display: grid;
+    grid-template-columns: minmax(240px, 2fr) repeat(2, minmax(170px, 1fr)) auto;
+    gap: 16px;
+    align-items: end;
+    margin: 32px 0 20px;
+    padding: 20px 22px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.listing-controls label {
+    display: grid;
+    gap: 7px;
+    color: var(--blue-dark);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.listing-controls input,
+.listing-controls select {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 14px;
+    background-color: var(--white);
+    border: 1px solid var(--gray-border) !important;
+    border-radius: 10px;
+    color: var(--blue-darkest);
+    font-size: 14.5px;
+    font-weight: 500;
+}
+
+.listing-controls input::placeholder { color: #8a93b8; font-weight: 400; }
+
+.listing-controls select {
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right: 38px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23393f86' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.listing-controls input:hover,
+.listing-controls select:hover { border-color: var(--blue-accent) !important; }
+
+/* secondary action: outline, so it never competes with the cards */
+.listing-controls .listing-clear {
+    min-height: 46px;
+    padding: 0 22px;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    color: var(--blue-dark);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.listing-controls .listing-clear:hover {
+    background: var(--blue-xpale);
+    border-color: var(--blue-accent);
+    color: var(--blue-dark);
+}
+
+/* ---------- grid ---------- */
+.internship-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin: 0 0 40px;
+}
+
+/* ---------- internship card ---------- */
+.internship-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+    padding: 24px;
+    text-align: left;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.internship-card:hover,
+.internship-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--blue-accent);
+    box-shadow: var(--shadow-lg);
+    outline: none;
+}
+
+/* accent rule along the top edge, drawn in on hover */
+.internship-card::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 24px;
+    right: 24px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: var(--blue-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.internship-card:hover::before,
+.internship-card:focus-visible::before { transform: scaleX(1); }
+
+.internship-card__top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.internship-card__logo {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    padding: 6px;
+    object-fit: contain;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 12px;
+}
+
+.internship-card__top > div { min-width: 0; }
+
+.internship-card h3 {
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--blue-dark);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+.internship-card__company {
+    margin: 4px 0 0;
+    overflow: hidden;
+    color: var(--gray-text);
+    font-size: 14px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.internship-card__description {
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--gray-text);
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.internship-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.internship-card__meta span {
+    padding: 5px 12px;
+    background: var(--blue-xpale);
+    border: 0;
+    border-radius: 999px;
+    color: var(--blue-accent);
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.internship-card .save-btn {
+    align-self: flex-start;
+    margin: 0;
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.internship-card footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding: 14px 0 0;
+    border-top: 1px solid var(--blue-xpale);
+    color: var(--gray-text);
+    font-size: 13px;
+}
+
+.internship-card .card-details {
+    color: var(--blue-accent);
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.internship-card:hover .card-details { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- saved + tracker sections sit inside the same container ---------- */
+#saved-section,
+#tracker-section {
+    max-width: none;
+    margin: 0 0 32px;
+    padding: 0;
+}
+
+/* ---------- detail popup ---------- */
+.internship-modal { text-align: left; }
+
+.internship-modal__dialog {
+    width: min(780px, 100%);
+    padding: 32px;
+    border-radius: 20px;
+}
+
+.internship-modal .detail-header {
+    gap: 16px;
+    padding: 0 40px 20px 0;
+    border-bottom: 1px solid var(--blue-xpale);
+}
+
+.internship-modal .detail-header h2 {
+    margin: 2px 0 4px;
+    font-size: 24px;
+    line-height: 1.25;
+}
+
+.internship-modal .detail-meta { margin-top: 10px; gap: 8px; }
+
+.internship-modal .detail-meta span,
+.internship-modal .detail-meta time {
+    padding: 5px 12px;
+    background: var(--blue-xpale);
+    border-radius: 999px;
+    color: var(--blue-accent);
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+.internship-modal section { margin-top: 26px; }
+
+.internship-modal section h3 {
+    margin: 0 0 10px;
+    color: var(--blue-dark);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.internship-modal .detail-description {
+    color: var(--gray-text);
+    font-size: 15px;
+    line-height: 1.75;
+}
+
+.internship-modal .detail-map {
+    height: 260px;
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+}
+
+.internship-modal .detail-actions {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--blue-xpale);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+    .listing-controls { grid-template-columns: 1fr 1fr; }
+    .listing-controls .listing-search { grid-column: 1 / -1; }
+    .listing-controls .listing-clear { grid-column: 1 / -1; }
+}
+
+@media (max-width: 600px) {
+    main.container { padding: 0 16px; }
+    .listing-controls { grid-template-columns: 1fr; padding: 16px; margin-top: 24px; }
+    .internship-grid { grid-template-columns: 1fr; gap: 18px; }
+    .internship-card { padding: 20px; }
+    .internship-modal__dialog { padding: 24px 18px; }
+}
+
+/* ===== Listing Fixes (was listing-fix.css) ===== */
+/* Corrects internship-listing layout and controls. */
+/* Internships page: layout for 4 filters + Clear button, and logos that are white-on-transparent. */
+.listing-controls {
+  grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(140px, 1fr)) auto;
+  text-align: left;
+}
+.listing-controls .listing-clear { white-space: nowrap; }
+@media (max-width: 1000px) {
+  .listing-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .listing-controls .listing-search { grid-column: 1 / -1; }
+  .listing-controls .listing-clear { grid-column: 1 / -1; justify-self: end; }
+}
+@media (max-width: 720px) {
+  .listing-controls { grid-template-columns: 1fr; }
+  .listing-controls .listing-clear { justify-self: stretch; }
+}
+img[src*="fc_logo_white"] { background: #111154; padding: 4px; }
+
+/* ===== UI Fixes (was ui-fixes.css) ===== */
+/* Applies saved, card, and button interface fixes. */
+/* ============================================================
+   ui-fixes.css - load LAST (after theme.css / listing-fix.css) on
+   home.html, index.html and internships.html.
+   - bullet-style info on internship cards
+   - icon buttons (Save / Apply / View details / Remove)
+   - compact buttons in the detail popup
+   - confirmation dialog before removing a saved internship
+   ============================================================ */
+
+/* ---------- icons ---------- */
+.ui-icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- card: bullet-style info (icon + bold label + value) ---------- */
+.internship-card .card-info {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.internship-card .card-info li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--gray-text, #4a5068);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.internship-card .card-info .ui-icon {
+  margin-top: 2px;
+  color: var(--blue-accent, #393f86);
+}
+
+.internship-card .card-info__label {
+  flex: none;
+  color: var(--blue-dark, #111154);
+  font-weight: 700;
+}
+
+.internship-card .card-info__value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- card: footer with View details + icon buttons ---------- */
+.internship-card .card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.internship-card .card-details {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.internship-card .card-actions__btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.internship-card .card-btn,
+.internship-card .card-actions .save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.internship-card .card-btn--apply {
+  background: var(--blue-dark, #111154);
+  border: 1.5px solid var(--blue-dark, #111154);
+  color: #fff;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.internship-card .card-btn--apply:hover {
+  background: var(--blue-accent, #393f86);
+  border-color: var(--blue-accent, #393f86);
+  color: #fff;
+}
+
+.internship-card .card-btn--apply:active {
+  transform: scale(0.96);
+}
+.internship-card .card-btn--apply.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Save button: bookmark icon fills in when saved */
+.save-btn .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+.save-btn.is-saved .ui-icon {
+  fill: currentColor;
+}
+
+/* ---------- detail popup ---------- */
+/* theme.css gives the dialog 32px padding; the hero/body/actions layout needs 0 */
+.internship-modal .internship-modal__dialog {
+  padding: 0;
+}
+
+.internship-modal .detail-facts {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.internship-modal .detail-actions {
+  margin: 0;
+  padding: 14px 24px;
+  gap: 10px;
+}
+
+/* compact buttons (were 46px tall with big padding) */
+.internship-modal .detail-actions .save-btn,
+.internship-modal .detail-apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: none;
+}
+
+/* the old CSS bookmark icon is replaced by the inline SVG icon */
+.internship-modal .detail-actions .save-btn::before {
+  content: none;
+  display: none;
+}
+
+.internship-modal .detail-actions .save-btn {
+  border: 1.5px solid var(--blue-accent, #393f86);
+  background: #fff;
+  color: var(--blue-accent, #393f86);
+}
+
+.internship-modal .detail-actions .save-btn:hover:not(:disabled) {
+  background: var(--blue-xpale, #eef2ff);
+}
+
+.internship-modal .detail-actions .save-btn.is-saved,
+.internship-modal .detail-actions .save-btn.is-saved:hover:not(:disabled) {
+  border-color: var(--blue-accent, #393f86);
+  background: var(--blue-accent, #393f86);
+  color: #fff;
+}
+
+.internship-modal .detail-apply {
+  border: 1.5px solid var(--blue-dark, #111154);
+  background: var(--blue-dark, #111154);
+  color: #fff;
+}
+
+.internship-modal .detail-apply:hover {
+  border-color: var(--blue-accent, #393f86);
+  background: var(--blue-accent, #393f86);
+  transform: none;
+  box-shadow: none;
+}
+
+.internship-modal .detail-source {
+  margin: 12px 0 0;
+  color: #6b7390;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 720px) {
+  .internship-modal .detail-actions {
+    padding: 12px 16px;
+  }
+  .internship-modal .detail-actions .save-btn,
+  .internship-modal .detail-apply {
+    flex: 1;
+    padding: 0 12px;
+  }
+  .internship-modal .detail-actions #modal-save-slot {
+    flex: 1;
+  }
+  .internship-modal .detail-actions #modal-save-slot .save-btn {
+    width: 100%;
+  }
+}
+
+/* ---------- Saved Internships list ---------- */
+.saved-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.saved-actions .saved-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.saved-actions .saved-btn .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.saved-actions .saved-btn--view {
+  background: #fff;
+  border: 1.5px solid var(--blue-accent, #393f86);
+  color: var(--blue-accent, #393f86);
+}
+.saved-actions .saved-btn--view:hover {
+  background: var(--blue-xpale, #eef2ff);
+}
+
+.saved-actions .saved-btn--apply {
+  background: var(--blue-dark, #111154);
+  border: 1.5px solid var(--blue-dark, #111154);
+  color: #fff;
+}
+.saved-actions .saved-btn--apply:hover {
+  background: var(--blue-accent, #393f86);
+  border-color: var(--blue-accent, #393f86);
+}
+
+@media (max-width: 600px) {
+  .saved-actions {
+    width: 100%;
+  }
+  .saved-actions .saved-btn {
+    flex: 1;
+  }
+  .saved-item .saved-remove {
+    width: auto;
+  }
+}
+
+/* ---------- confirm-before-remove dialog ---------- */
+.kis-confirm {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(8, 8, 56, 0.6);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: kisConfirmFade 0.15s ease-out;
+}
+
+.kis-confirm__box {
+  width: min(420px, 100%);
+  padding: 26px 24px 22px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 30px 70px -24px rgba(8, 8, 56, 0.6);
+  text-align: left;
+}
+
+.kis-confirm__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: #fdf3f1;
+  color: var(--danger, #c0392b);
+}
+
+.kis-confirm__icon .ui-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.kis-confirm__title {
+  margin: 0 0 6px;
+  color: var(--blue-dark, #111154);
+  font-size: 18px;
+}
+
+.kis-confirm__text {
+  margin: 0 0 22px;
+  color: var(--gray-text, #4a5068);
+  font-size: 14.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.kis-confirm__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.kis-confirm__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.kis-confirm__btn .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.kis-confirm__btn--cancel {
+  background: #fff;
+  border: 1.5px solid var(--gray-border, #c5cde8);
+  color: var(--blue-dark, #111154);
+}
+.kis-confirm__btn--cancel:hover {
+  background: var(--blue-xpale, #eef2ff);
+}
+
+.kis-confirm__btn--danger {
+  background: var(--danger, #c0392b);
+  border: 1.5px solid var(--danger, #c0392b);
+  color: #fff;
+}
+.kis-confirm__btn--danger:hover {
+  background: #a93226;
+  border-color: #a93226;
+}
+
+@media (max-width: 420px) {
+  .kis-confirm__actions {
+    flex-direction: column-reverse;
+  }
+  .kis-confirm__btn {
+    width: 100%;
+  }
+}
+
+@keyframes kisConfirmFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* success toast (e.g. "Removed from saved internships.") */
+.kis-toast.kis-toast--ok {
+  background: var(--blue-dark, #111154);
 }
