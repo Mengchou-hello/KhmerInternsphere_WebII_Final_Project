@@ -1,0 +1,409 @@
+/* ============================================================
+   ui-fixes.css - load LAST (after theme.css / listing-fix.css) on
+   home.html, index.html and internships.html.
+   - bullet-style info on internship cards
+   - icon buttons (Save / Apply / View details / Remove)
+   - compact buttons in the detail popup
+   - confirmation dialog before removing a saved internship
+   ============================================================ */
+
+/* ---------- icons ---------- */
+.ui-icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- card: bullet-style info (icon + bold label + value) ---------- */
+.internship-card .card-info {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.internship-card .card-info li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--gray-text, #4a5068);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.internship-card .card-info .ui-icon {
+  margin-top: 2px;
+  color: var(--blue-accent, #393f86);
+}
+
+.internship-card .card-info__label {
+  flex: none;
+  color: var(--blue-dark, #111154);
+  font-weight: 700;
+}
+
+.internship-card .card-info__value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- card: footer with View details + icon buttons ---------- */
+.internship-card .card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.internship-card .card-details {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.internship-card .card-actions__btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.internship-card .card-btn,
+.internship-card .card-actions .save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.internship-card .card-btn--apply {
+  background: var(--blue-dark, #111154);
+  border: 1.5px solid var(--blue-dark, #111154);
+  color: #fff;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.internship-card .card-btn--apply:hover {
+  background: var(--blue-accent, #393f86);
+  border-color: var(--blue-accent, #393f86);
+  color: #fff;
+}
+
+.internship-card .card-btn--apply:active {
+  transform: scale(0.96);
+}
+.internship-card .card-btn--apply.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Save button: bookmark icon fills in when saved */
+.save-btn .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+.save-btn.is-saved .ui-icon {
+  fill: currentColor;
+}
+
+/* ---------- detail popup ---------- */
+/* theme.css gives the dialog 32px padding; the hero/body/actions layout needs 0 */
+.internship-modal .internship-modal__dialog {
+  padding: 0;
+}
+
+.internship-modal .detail-facts {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.internship-modal .detail-actions {
+  margin: 0;
+  padding: 14px 24px;
+  gap: 10px;
+}
+
+/* compact buttons (were 46px tall with big padding) */
+.internship-modal .detail-actions .save-btn,
+.internship-modal .detail-apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: none;
+}
+
+/* the old CSS bookmark icon is replaced by the inline SVG icon */
+.internship-modal .detail-actions .save-btn::before {
+  content: none;
+  display: none;
+}
+
+.internship-modal .detail-actions .save-btn {
+  border: 1.5px solid var(--blue-accent, #393f86);
+  background: #fff;
+  color: var(--blue-accent, #393f86);
+}
+
+.internship-modal .detail-actions .save-btn:hover:not(:disabled) {
+  background: var(--blue-xpale, #eef2ff);
+}
+
+.internship-modal .detail-actions .save-btn.is-saved,
+.internship-modal .detail-actions .save-btn.is-saved:hover:not(:disabled) {
+  border-color: var(--blue-accent, #393f86);
+  background: var(--blue-accent, #393f86);
+  color: #fff;
+}
+
+.internship-modal .detail-apply {
+  border: 1.5px solid var(--blue-dark, #111154);
+  background: var(--blue-dark, #111154);
+  color: #fff;
+}
+
+.internship-modal .detail-apply:hover {
+  border-color: var(--blue-accent, #393f86);
+  background: var(--blue-accent, #393f86);
+  transform: none;
+  box-shadow: none;
+}
+
+.internship-modal .detail-source {
+  margin: 12px 0 0;
+  color: #6b7390;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 720px) {
+  .internship-modal .detail-actions {
+    padding: 12px 16px;
+  }
+  .internship-modal .detail-actions .save-btn,
+  .internship-modal .detail-apply {
+    flex: 1;
+    padding: 0 12px;
+  }
+  .internship-modal .detail-actions #modal-save-slot {
+    flex: 1;
+  }
+  .internship-modal .detail-actions #modal-save-slot .save-btn {
+    width: 100%;
+  }
+}
+
+/* ---------- Saved Internships list ---------- */
+.saved-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.saved-actions .saved-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.saved-actions .saved-btn .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.saved-actions .saved-btn--view {
+  background: #fff;
+  border: 1.5px solid var(--blue-accent, #393f86);
+  color: var(--blue-accent, #393f86);
+}
+.saved-actions .saved-btn--view:hover {
+  background: var(--blue-xpale, #eef2ff);
+}
+
+.saved-actions .saved-btn--apply {
+  background: var(--blue-dark, #111154);
+  border: 1.5px solid var(--blue-dark, #111154);
+  color: #fff;
+}
+.saved-actions .saved-btn--apply:hover {
+  background: var(--blue-accent, #393f86);
+  border-color: var(--blue-accent, #393f86);
+}
+
+@media (max-width: 600px) {
+  .saved-actions {
+    width: 100%;
+  }
+  .saved-actions .saved-btn {
+    flex: 1;
+  }
+  .saved-item .saved-remove {
+    width: auto;
+  }
+}
+
+/* ---------- confirm-before-remove dialog ---------- */
+.kis-confirm {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(8, 8, 56, 0.6);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: kisConfirmFade 0.15s ease-out;
+}
+
+.kis-confirm__box {
+  width: min(420px, 100%);
+  padding: 26px 24px 22px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 30px 70px -24px rgba(8, 8, 56, 0.6);
+  text-align: left;
+}
+
+.kis-confirm__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: #fdf3f1;
+  color: var(--danger, #c0392b);
+}
+
+.kis-confirm__icon .ui-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.kis-confirm__title {
+  margin: 0 0 6px;
+  color: var(--blue-dark, #111154);
+  font-size: 18px;
+}
+
+.kis-confirm__text {
+  margin: 0 0 22px;
+  color: var(--gray-text, #4a5068);
+  font-size: 14.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.kis-confirm__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.kis-confirm__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.kis-confirm__btn .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.kis-confirm__btn--cancel {
+  background: #fff;
+  border: 1.5px solid var(--gray-border, #c5cde8);
+  color: var(--blue-dark, #111154);
+}
+.kis-confirm__btn--cancel:hover {
+  background: var(--blue-xpale, #eef2ff);
+}
+
+.kis-confirm__btn--danger {
+  background: var(--danger, #c0392b);
+  border: 1.5px solid var(--danger, #c0392b);
+  color: #fff;
+}
+.kis-confirm__btn--danger:hover {
+  background: #a93226;
+  border-color: #a93226;
+}
+
+@media (max-width: 420px) {
+  .kis-confirm__actions {
+    flex-direction: column-reverse;
+  }
+  .kis-confirm__btn {
+    width: 100%;
+  }
+}
+
+@keyframes kisConfirmFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* success toast (e.g. "Removed from saved internships.") */
+.kis-toast.kis-toast--ok {
+  background: var(--blue-dark, #111154);
+}

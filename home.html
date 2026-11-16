@@ -9,8 +9,12 @@
     <link rel="stylesheet" href="./css/nav.css" />
     <link rel="stylesheet" href="./css/home.css" />
     <link rel="stylesheet" href="./css/latest.css" />
+    <link rel="stylesheet" href="./css/saved.css" />
+    <link rel="stylesheet" href="./css/features.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="./css/footer.css" />
     <link rel="stylesheet" href="./css/theme.css" />
+    <link rel="stylesheet" href="./css/ui-fixes.css" />
   </head>
 
   <body>
@@ -43,39 +47,39 @@
     <main>
       <!-- HERO WITH IMAGE -->
       <div class="hero-shell">
-      <section class="hero">
-        <div class="container hero-flex">
-          <div class="hero-text">
-            <h1 data-i18n="homeHero">Build Your Portfolios with Khmer InternSphere</h1>
-            <p>
-              Connecting talented Cambodian students with leading companies for
-              meaningful internship experiences.
-            </p>
+        <section class="hero">
+          <div class="container hero-flex">
+            <div class="hero-text">
+              <h1 data-i18n="homeHero">Build Your Portfolios with Khmer InternSphere</h1>
+              <p>
+                Connecting talented Cambodian students with leading companies for
+                meaningful internship experiences.
+              </p>
 
-            <div class="btn-group">
-              <a href="internships.html" class="btn btn-primary"
-                >Find Internships &rarr;</a
-              >
+              <div class="btn-group">
+                <a href="internships.html" class="btn btn-primary"
+                  >Find Internships &rarr;</a
+                >
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      <section class="stats">
-        <div class="container stats-grid">
-          <div>
-            <h2>500+</h2>
-            <p>Students</p>
+        </section>
+        <section class="stats">
+          <div class="container stats-grid">
+            <div>
+              <h2>500+</h2>
+              <p>Students</p>
+            </div>
+            <div>
+              <h2>120+</h2>
+              <p>Companies</p>
+            </div>
+            <div>
+              <h2>300+</h2>
+              <p>Internships</p>
+            </div>
           </div>
-          <div>
-            <h2>120+</h2>
-            <p>Companies</p>
-          </div>
-          <div>
-            <h2>300+</h2>
-            <p>Internships</p>
-          </div>
-        </div>
-      </section>
+        </section>
       </div>
       <div class="logo-slider">
         <div class="logo-track" id="logoTrack">
@@ -191,7 +195,11 @@
       </div>
     </footer>
     <script src="js/config.js"></script>
-    <script src="js/api-client.js"></script>
+    <script src="js/api-client.js?v=4"></script>
+    <script src="js/card.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/detail-map.js"></script>
+    <script src="js/saved.js?v=4"></script>
     <script src="js/main.js"></script>
     <script src="js/latest.js"></script>
   </body>

@@ -1,9 +1,7 @@
-/* latest.js - Member 3
-   "Latest internships" on home.html and index.html (3 to 6 listings).
-   Needs a container with id="latest-list". Load after config.js, api-client.js and main.js.
-   Add css/latest.css for the card styles. Remotive must be credited (done below).
-   If Member 1's renderCards(list, container) exists it is used; otherwise simple
-   cards are drawn here so the home page never depends on another member. */
+/* latest.js - "Latest Internships" on the home page.
+   Cards use the same markup as the Internships page (card.js): bullet-style info, plus Save and Apply
+   icon buttons. Clicking a card (or "View details") opens our own detail popup, never the external site.
+   Load AFTER card.js. */
 (() => {
   'use strict';
   const box = document.getElementById('latest-list');
@@ -12,55 +10,25 @@
   const COUNT = 6;
   if (!document.querySelector('.latest-source')) {
     box.insertAdjacentHTML('afterend',
-      '<p class="latest-source">Jobs via <a href="https://remotive.com" target="_blank" rel="noopener">Remotive</a></p>');
+      '<p class="latest-source">Cambodian internships, each linked to its original posting.</p>');
   }
-  const FALLBACK_LOGO = 'img/logo.png';
-  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
-    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-  const normalize = (j) => ({
-    id: String(j.id),
-    title: j.title,
-    company: j.company_name,
-    location: j.candidate_required_location || 'Remote',
-    category: j.category,
-    jobType: j.job_type,
-    logo: j.company_logo || '',
-    url: j.url,
-    description: j.description,
-    date: j.publication_date
-  });
-
-  const simpleCards = (list) => list.map((job) => `
-    <article class="latest-card" data-id="${esc(job.id)}">
-      <img class="latest-logo" src="${esc(job.logo || FALLBACK_LOGO)}" alt="${esc(job.company)} logo">
-      <h3>${esc(job.title)}</h3>
-      <p class="latest-company">${esc(job.company)}</p>
-      <p class="latest-location">${esc(job.location)}</p>
-      <a class="latest-apply" href="${esc(job.url)}" target="_blank" rel="noopener">View listing</a>
-    </article>`).join('');
 
   function show(list) {
-    box.innerHTML = '';
-    if (typeof renderCards === 'function') {
-      try { renderCards(list, box); } catch { /* use the simple cards below */ }
-    }
-    if (!box.children.length) box.innerHTML = simpleCards(list);
-    box.querySelectorAll('img').forEach((img) =>
-      img.addEventListener('error', () => { img.src = FALLBACK_LOGO; }, { once: true }));
+    box.innerHTML = KISCard.cardsHtml(list);
+    KISCard.wireLogos(box);
   }
 
   async function loadLatest() {
     box.innerHTML = '<p class="latest-msg">Loading latest internships...</p>';
     try {
-      const jobs = await fetchRemotiveJobs({ search: 'internship', limit: 100 });
-      let list = (jobs || []).filter((j) => /intern/i.test(j.title) || j.job_type === 'internship');
-      if (list.length < 3) list = jobs || [];
-      list = list.slice(0, COUNT).map(normalize);
+      const feed = await getInternshipFeed(); // Cambodia internships by default
+      const list = feed.jobs.slice(0, COUNT);
       if (!list.length) {
         box.innerHTML = '<p class="latest-msg">No internships found right now. Please check back soon.</p>';
         return;
       }
+      window.KISLatestJobs = list;
+      if (!window.getJobById) window.getJobById = (id) => window.KISLatestJobs.find((job) => String(job.id) === String(id));
       show(list);
     } catch {
       box.innerHTML = `<div class="latest-msg latest-error">
