@@ -7,7 +7,7 @@ A web application that helps Cambodian students find, save and apply for interns
 **Instructor:** Ms. Monyrath Buntoun
 **Repository:** https://github.com/Mengchou-hello/KhmerInternsphere_WebII_Final_Project
 
-Khmer InternSphere started as a static site in INFO 250 (Web Development I). In this course we rebuilt it as a dynamic, JavaScript-driven web app that uses vanilla JavaScript (ES6) and three public APIs.
+Khmer InternSphere started as a static site in INFO 250 (Web Development I). In this course we rebuilt it as a dynamic, JavaScript-driven web app that uses vanilla JavaScript (ES6), a hand-checked Cambodian internship list and three public services.
 
 ---
 
@@ -24,9 +24,9 @@ Khmer InternSphere started as a static site in INFO 250 (Web Development I). In 
 
 | Member | Role | Main files |
 |--------|------|------------|
-| 1 | Listings, Companies, About | `internships.html`, `companies.html`, `about.html`, `js/internships.js`, `js/companies.js` |
+| 1 | Listings, Companies, About | `internships.html`, `companies.html`, `about.html`, `js/internships.js`, `js/companies.js`, `css/internship.css`, `css/company.css`, `css/about.css` |
 | 2 | Detail view, map, contact form | `js/detail-map.js`, `js/contact.js`, `css/modal_new.css`, `css/contact.css` |
-| 3 | API client, bookmarks, home page, site consistency | `js/config.js`, `js/api-client.js`, `js/main.js`, `js/saved.js`, `js/latest.js`, `css/style.css`, `css/nav.css`, `css/home.css` |
+| 3 | API client, bookmarks, home page, site consistency | `js/config.js`, `js/api-client.js`, `js/card.js`, `js/main.js`, `js/saved.js`, `js/latest.js`, `data/internships.json`, `css/style.css`, `css/nav.css`, `css/footer.css`, `css/theme.css`, `css/home.css`, `css/latest.css`, `css/saved.css`, `css/features.css`, `css/ui-fixes.css`, `css/listing-fix.css` |
 | 4 | Applications, tracker, final report | `js/applications.js`, `js/tracker.js`, `css/tracker.css`, `README.md` |
 
 ---
@@ -37,32 +37,35 @@ Khmer InternSphere started as a static site in INFO 250 (Web Development I). In 
 Home, Internships, Companies, About and Contact. All pages share the same header, navigation, active-link state and footer.
 
 ### Dynamic internship listings
-- Real internship listings are fetched from the Remotive API with `fetch()` and `async/await`.
-- Cards show the company logo, title, company, location and category, and are rendered with template literals.
+- The default list is **Cambodia Internships**, loaded with `fetch()` and `async/await` from `data/internships.json`. Every entry links to its original posting, and entries past their `deadline` are hidden automatically.
+- A **Source** dropdown switches to **International Remote**, which uses the Remotive API. The two sources are never mixed.
+- Cards show the company logo, title, company, location and category, and are rendered with template literals (`js/card.js`).
 - Keyword search (with a 300 ms debounce), location filter and category filter combine without reloading the page.
 - Loading spinner, friendly error message with a Retry button, and an empty-state message.
+- Cards can be opened through a deep link.
 
 ### Internship detail view with map
 - Clicking a card opens a modal with the full description, company, location, category, date and an Apply link.
 - A Leaflet map with an OpenStreetMap marker shows where the internship is based.
-- Locations are converted to coordinates with Nominatim, cached by address and limited to 1 request per second.
+- Locations are converted to coordinates with Nominatim, cached by address and limited to 1 request per second. A failed lookup is retried the next time the modal opens.
 - Locations that cannot be mapped (for example "Worldwide") show a fallback message instead of a map.
 
 ### Save / bookmark internships
 - Save and unsave from the cards and from the detail modal (POST and DELETE).
 - Saved items persist across page reloads (GET on page load).
 - The button is disabled while a request is running, so fast double-clicks do not create duplicates.
-- A "Saved Internships" section lists saved items with a Remove button and an empty state.
+- A "Saved Internships" section lists saved items with a Remove button (with a confirm dialog) and an empty state.
 
-### Application system and tracker
+### Application system and tracker *(Member 4, to add)*
 - Validated application form: name, email, resume link (valid URL) and a message of at least 20 characters, with inline errors.
 - Applications are submitted with POST, and a second application to the same job is blocked.
 - The tracker lists all applications with colored status badges: Submitted, Under Review, Accepted and Rejected.
 - Update the status, message or resume link (PUT) and withdraw an application with a confirm step (DELETE).
 - The page updates without a reload, and data persists after a refresh.
+- `internships.html` already has an empty `#tracker-section` for this feature.
 
 ### Companies
-Companies are built from the live listing data instead of static content. Each company card shows its logo, name and number of open roles, and expands to list its open internships.
+Companies are built from the live listing data instead of static content. Each company card shows its logo, name and number of open roles, and opens a modal listing its open internships.
 
 ### Contact form validation
 Required fields, email format and Cambodian phone format (`+855...` or `0xx...`), with real-time inline error messages, a success message and a form reset.
@@ -75,27 +78,38 @@ ES6 throughout (`const`/`let`, arrow functions, template literals, `.map()`, `.f
 
 ---
 
-## APIs used
+## Data sources and APIs
 
-| API | Method | Endpoint | Used for |
-|-----|--------|----------|----------|
-| [Remotive](https://github.com/remotive-io/remote-jobs-api) | GET | `https://remotive.com/api/remote-jobs` | Internship feed, search, category filter, company grouping, home page |
+The Internships, Companies and Home pages read through one function, `getInternshipFeed()` in `js/api-client.js`. It has two sources, and they are never mixed:
+
+| Source | Used when | Where the data comes from |
+|--------|-----------|---------------------------|
+| **Cambodia** (default) | `CONFIG.DEFAULT_SOURCE = 'cambodia'` | `data/internships.json`, a hand-checked list. Every entry links to its original posting, and entries past their `deadline` are hidden automatically. |
+| **International Remote** | "Source" dropdown on `internships.html` | The Remotive API. The answer is cached in `localStorage` for 6 hours, because Remotive allows only a few requests per day. |
+
+### Services used
+
+| Service | Method | Endpoint | Used for |
+|---------|--------|----------|----------|
+| [Remotive](https://github.com/remotive-io/remote-jobs-api) | GET | `https://remotive.com/api/remote-jobs` | Optional International Remote feed |
 | [Nominatim (OpenStreetMap)](https://operations.osmfoundation.org/policies/nominatim/) | GET | `https://nominatim.openstreetmap.org/search?q=...&format=json&limit=1` | Convert a job location into map coordinates |
 | [restful-api.dev](https://restful-api.dev/) | GET, POST, PUT, DELETE | `https://api.restful-api.dev/objects` and `/objects/{id}` | Saved internships and applications |
 
-Leaflet with OpenStreetMap tiles (loaded from cdnjs) draws the map. It is a library, not one of the three APIs.
+Leaflet 1.9.4 with OpenStreetMap tiles (loaded from unpkg) draws the map. It is a library, not one of the three APIs.
 
 ### Shared data shape
 
-Every listing is normalized to this shape, and all members use it:
+Both sources are normalized to the same shape, so every feature works with either one:
 
 ```js
-{ id, title, company, location, category, jobType, logo, url, description, date }
+{ id, title, company, location, category, jobType, logo, url, description, date,
+  // Cambodia list only:
+  deadline, salary, verifiedOn, source, origin, applyLabel }
 ```
 
 ### How the data flows
 
-- **Page load:** fetch listings, then render cards.
+- **Page load:** `getInternshipFeed()` loads the selected source, then cards are rendered.
 - **Save click:** POST to restful-api.dev, then update the button and the Saved list.
 - **Apply form:** validate, POST, then the tracker updates.
 - **Status change or withdraw:** PUT or DELETE, then the tracker updates.
@@ -120,59 +134,85 @@ await apiDelete(rec.id);                              // delete
 ```
 KhmerInternsphere_Project/
 ├── index.html           (same as home.html)
-├── home.html
-├── internships.html
-├── companies.html
-├── about.html
-├── contact.html
+├── home.html            Home: hero, stats, logo slider, Latest Internships
+├── internships.html     Listings: search, filters, Source switch, #saved-section, #tracker-section
+├── companies.html       Company cards built from the feed, company modal
+├── about.html           Team and project info
+├── contact.html         Contact form (validated by contact.js)
 ├── README.md
+├── .gitignore
 ├── assets/
-│   └── favicon.ico
+│   ├── favicon.ico      Browser tab icon
+│   ├── homepage.jpg     Home page image
+│   └── fonts/           Campton font files used by the site CSS
 ├── img/
-│   └── logo.png
+│   └── logo.png         Site logo and fallback company logo
+├── data/
+│   └── internships.json Curated Cambodian internships (primary feed)
 ├── css/
-│   ├── style.css        global tokens, base, hero, stats, buttons, footer
-│   ├── nav.css          header, navigation, burger menu
-│   ├── home.css         home page only
+│   ├── style.css        Global tokens, base, hero, stats, buttons
+│   ├── nav.css          Header, navigation, burger menu
+│   ├── footer.css       Shared footer
+│   ├── theme.css        Site-wide theme overrides
+│   ├── home.css         Home page only
 │   ├── latest.css       "Latest Internships" section
-│   ├── saved.css        save buttons and Saved Internships list
-│   ├── internship.css
-│   ├── company.css
-│   ├── about.css
-│   ├── contact.css
-│   ├── modal_new.css
-│   └── tracker.css
+│   ├── internship.css   Internships page layout
+│   ├── company.css      Companies page
+│   ├── about.css        About page
+│   ├── contact.css      Contact page layout
+│   ├── modal_new.css    Internship modal styles
+│   ├── saved.css        Save buttons and Saved Internships list
+│   ├── features.css     Shared: listing states, company modal, detail modal, form errors
+│   ├── ui-fixes.css     Card buttons, detail-modal buttons, remove-confirm dialog (load last)
+│   ├── listing-fix.css  Small listing-page patch
+│   └── tracker.css      (to add) application form and tracker
 └── js/
-    ├── config.js        all API URLs and the team prefix
-    ├── api-client.js    apiGet, apiPost, apiPut, apiDelete
-    ├── main.js          logo slider, scroll reveal, burger nav, active link
-    ├── internships.js   listings, search and filters
-    ├── companies.js     company profiles
-    ├── detail-map.js    detail modal, geocoding, Leaflet map
-    ├── contact.js       contact form validation
-    ├── saved.js         bookmarks
-    ├── latest.js        latest internships on the home page
-    ├── applications.js  application form
-    └── tracker.js       application tracker
+    ├── config.js        All API URLs, team prefix `KIS-`, fallback logo (loads first)
+    ├── api-client.js    apiGet / apiPost / apiPut / apiDelete + getInternshipFeed()
+    ├── card.js          Shared card markup and SVG icons (window.KISCard)
+    ├── main.js          Logo slider, scroll reveal, burger nav, active link
+    ├── internships.js   Listings, search (300 ms debounce), filters, Retry, deep links
+    ├── companies.js     Groups jobs by company, company modal
+    ├── detail-map.js    Detail modal, Nominatim geocoding queue, Leaflet map
+    ├── contact.js       Contact form validation
+    ├── saved.js         Bookmarks: save, unsave, Saved list
+    ├── latest.js        Latest Internships on the home page
+    ├── applications.js  (to add) application form
+    └── tracker.js       (to add) application tracker
 ```
+
+Items marked **(to add)** belong to Member 4 and were not in the project folder when this README was written.
 
 ### Script and style order
 
-Every page loads the CSS in this order, then its own page CSS:
+Scripts go at the end of `<body>`. `config.js` always loads first, and `card.js` loads before anything that renders cards.
 
-```html
-<link rel="stylesheet" href="./css/style.css" />
-<link rel="stylesheet" href="./css/nav.css" />
-```
+| Page | Scripts, in order |
+|------|-------------------|
+| `internships.html` | `config.js`, `api-client.js`, `card.js`, Leaflet, `internships.js`, `detail-map.js`, `saved.js`, `main.js` |
+| `home.html` | `config.js`, `api-client.js`, `card.js`, Leaflet, `detail-map.js`, `saved.js`, `main.js`, `latest.js` |
+| `companies.html` | `config.js`, `api-client.js`, `companies.js`, `main.js` |
+| `contact.html` | `config.js`, `api-client.js`, `contact.js`, `main.js` |
+| `about.html` | `config.js`, `api-client.js`, `main.js` |
 
-Scripts go at the end of `<body>`, and `config.js` must come first:
+| Page | Styles, in order |
+|------|------------------|
+| `home.html` | `style.css`, `nav.css`, `home.css`, `latest.css`, `saved.css`, `features.css`, Leaflet, `footer.css`, `theme.css`, `ui-fixes.css` |
+| `internships.html` | `internship.css`, `modal_new.css`, Leaflet, `nav.css`, `saved.css`, `features.css`, `footer.css`, `theme.css`, `listing-fix.css`, `ui-fixes.css` |
+| `companies.html` | `company.css`, `features.css`, `nav.css`, `footer.css`, `theme.css` |
+| `contact.html` | `contact.css`, `features.css`, `nav.css`, `footer.css`, `theme.css` |
+| `about.html` | `about.css`, `nav.css`, `footer.css`, `theme.css` |
 
-```html
-<script src="js/config.js"></script>
-<script src="js/api-client.js"></script>
-<script src="js/main.js"></script>
-<!-- then the page's own scripts -->
-```
+Every page ends with `nav.css`/`footer.css`/`theme.css` or later, and `ui-fixes.css` always loads last because it overrides earlier rules.
+
+### Detail modal hooks (for Members 3 and 4)
+
+`js/detail-map.js` builds the modal and exposes:
+
+- `openDetailModal(job)` and `closeDetailModal()`
+- a `modal:open` event on `document`, with `detail: { job }`
+- `#modal-save-slot`: Member 3 mounts the Save button here
+- `#modal-apply-slot`: holds the Apply link; the in-app application button can replace it
 
 ---
 
@@ -185,14 +225,18 @@ No build step or API key is needed. The project is plain HTML, CSS and JavaScrip
    git clone https://github.com/Mengchou-hello/KhmerInternsphere_WebII_Final_Project.git
    cd KhmerInternsphere_WebII_Final_Project
    ```
-2. Serve the folder with a local web server. Do not open the HTML files directly with `file://`, because the Nominatim map requests need a normal web page origin.
+2. Serve the folder with a local web server. Do not open the HTML files directly with `file://`, because `data/internships.json` and the Nominatim map requests need a normal web page origin.
    - **VS Code:** install the Live Server extension, then right-click `home.html` and choose "Open with Live Server" (usually http://127.0.0.1:5500).
    - **Python:**
      ```bash
      python3 -m http.server 5500
      ```
      then open http://localhost:5500/home.html.
-3. An internet connection is required, because the app calls live APIs.
+3. An internet connection is required for maps, bookmarks and the International Remote source.
+
+### Updating the Cambodian list
+
+Add or edit entries in `data/internships.json` by hand. Each entry should link to its original posting. Entries past their `deadline` disappear automatically.
 
 ---
 
@@ -206,10 +250,12 @@ No build step or API key is needed. The project is plain HTML, CSS and JavaScrip
 
 ## Known limitations
 
-- Remotive lists remote jobs worldwide, so many internships are not located in Cambodia.
-- restful-api.dev is a free shared service for learning, so data can be slow, limited or removed by the provider. Our records are tagged with `KIS-` to keep them separate from other students' data.
+- The default list is a hand-checked file, not a live API, so it must be updated by hand.
+- Remotive lists remote jobs worldwide, so those internships are not in Cambodia. Remotive also limits how often it can be called, so answers are cached for 6 hours.
+- restful-api.dev is a free shared service (about 50 requests a day), so bookmarks can fail with a "request limit" message. Records are tagged with `KIS-` to keep them separate from other students' data.
 - Nominatim allows 1 request per second, so maps for new locations can take a moment to load. Repeated locations are served from the cache.
-- Bookmarks and applications are stored for the whole team's prefix, not for individual user accounts, because the app has no login.
+- Bookmarks and applications are stored for the whole team's `KIS-` prefix, not for individual user accounts, because the app has no login.
+- The contact form is validated in the browser only. No email is sent.
 
 ---
 
