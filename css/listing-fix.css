@@ -1,0 +1,16 @@
+/* Internships page: layout for 4 filters + Clear button, and logos that are white-on-transparent. */
+.listing-controls {
+  grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(140px, 1fr)) auto;
+  text-align: left;
+}
+.listing-controls .listing-clear { white-space: nowrap; }
+@media (max-width: 1000px) {
+  .listing-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .listing-controls .listing-search { grid-column: 1 / -1; }
+  .listing-controls .listing-clear { grid-column: 1 / -1; justify-self: end; }
+}
+@media (max-width: 720px) {
+  .listing-controls { grid-template-columns: 1fr; }
+  .listing-controls .listing-clear { justify-self: stretch; }
+}
+img[src*="fc_logo_white"] { background: #111154; padding: 4px; }
