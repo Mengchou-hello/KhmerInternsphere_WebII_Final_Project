@@ -4,197 +4,209 @@
    Needs style.css (design tokens) linked before it.
    JS hooks used by main.js: #burgerBtn, #mainNav, #navBackdrop,
    classes .open, .nav-open, .active
+
+   Desktop layout: a 3-column grid  [ logo | menu | actions ].
+   The two outer columns are equal (1fr), so the menu always sits
+   exactly in the middle of the bar and can never overlap the logo
+   or the Apply Now button.
    ============================================================ */
 
 /* =========================
    HEADER
    ========================= */
 header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 24px;
-    padding: 12px clamp(20px, 4vw, 48px);
-    background: rgba(17, 17, 84, 0.94);
-    -webkit-backdrop-filter: saturate(140%) blur(10px);
-    backdrop-filter: saturate(140%) blur(10px);
-    border-bottom: 1px solid rgba(202, 220, 252, 0.14);
-    box-shadow: 0 2px 12px rgba(8, 8, 56, 0.25);
-}
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 24px;
-    padding: 12px clamp(20px, 4vw, 48px);
-    background: rgba(17, 17, 84, 0.94);
-    -webkit-backdrop-filter: saturate(140%) blur(10px);
-    backdrop-filter: saturate(140%) blur(10px);
-    border-bottom: 1px solid rgba(202, 220, 252, 0.14);
-    box-shadow: 0 2px 12px rgba(8, 8, 56, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: 24px;
+  padding: 12px clamp(20px, 4vw, 48px);
+  background: rgba(17, 17, 84, 0.94);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid rgba(202, 220, 252, 0.14);
+  box-shadow: 0 2px 12px rgba(8, 8, 56, 0.25);
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .logo img {
-    display: block;
-    height: 44px;
+  display: block;
+  height: 44px;
 }
 
 /* =========================
-   DESKTOP NAV
+   DESKTOP NAV  (centered in the bar)
    ========================= */
 nav {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  gap: 4px;
 }
 
 nav a {
-    position: relative;
-    margin: 0;
-    padding: 8px 14px;
-    border-radius: var(--radius-sm);
-    color: var(--blue-pale);
-    font-size: 14.5px;
-    font-weight: 500;
-    text-decoration: none;
-    border-bottom: none;
-    transition: color 0.2s ease, background 0.2s ease;
+  position: relative;
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--blue-pale);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: none;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 nav a:hover {
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 nav a.active {
-    color: var(--white);
-    font-weight: 600;
-    background: transparent;
-    border-bottom: none;
+  color: var(--white);
+  font-weight: 600;
+  background: transparent;
+  border-bottom: none;
 }
 
 nav a.active::after {
-    content: "";
-    position: absolute;
-    left: 14px;
-    right: 14px;
-    bottom: 3px;
-    height: 2px;
-    border-radius: 2px;
-    background: var(--white);
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--white);
 }
 
 .header-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  justify-self: end;
+  gap: 10px;
 }
 
 .apply-now {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 38px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 700;
-    text-decoration: none;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-
-.apply-now {
-    padding: 0 16px;
-    background: var(--white);
-    border: 1px solid var(--white);
-    color: var(--blue-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 16px;
+  background: var(--white);
+  border: 1px solid var(--white);
+  border-radius: 999px;
+  color: var(--blue-dark);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .apply-now:hover {
-    background: var(--blue-pale);
-    border-color: var(--blue-pale);
-    transform: translateY(-1px);
+  background: var(--blue-pale);
+  border-color: var(--blue-pale);
+  transform: translateY(-1px);
+}
+
+/* Narrow desktop / tablet: keep the menu centered but a little tighter */
+@media (min-width: 769px) and (max-width: 960px) {
+  header {
+    column-gap: 14px;
+  }
+
+  .logo img {
+    height: 38px;
+  }
+
+  nav a {
+    padding: 8px 9px;
+    font-size: 14px;
+  }
+
+  nav a.active::after {
+    left: 9px;
+    right: 9px;
+  }
+
+  .apply-now {
+    padding: 0 13px;
+  }
 }
 
 /* =========================
    BURGER BUTTON (hidden on desktop)
    ========================= */
 .burger {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    width: 42px;
-    height: 42px;
-    padding: 4px;
-    background: transparent;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: background 0.2s ease;
-    z-index: 200;
-    flex-shrink: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  padding: 4px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  z-index: 200;
+  flex-shrink: 0;
 }
 
 .burger:hover {
-    background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .burger span {
-    display: block;
-    width: 24px;
-    height: 2.5px;
-    background: var(--blue-pale);
-    border-radius: 4px;
-    transform-origin: center;
-    transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+  display: block;
+  width: 24px;
+  height: 2.5px;
+  background: var(--blue-pale);
+  border-radius: 4px;
+  transform-origin: center;
+  transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
 }
 
 .burger.open span:nth-child(1) {
-    transform: translateY(7.5px) rotate(45deg);
+  transform: translateY(7.5px) rotate(45deg);
 }
 
 .burger.open span:nth-child(2) {
-    opacity: 0;
-    width: 0;
+  opacity: 0;
+  width: 0;
 }
 
 .burger.open span:nth-child(3) {
-    transform: translateY(-7.5px) rotate(-45deg);
+  transform: translateY(-7.5px) rotate(-45deg);
 }
 
 /* dimmer behind the open mobile menu */
 .nav-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(8, 8, 56, 0.45);
-    z-index: 98;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 56, 0.45);
+  z-index: 98;
 }
 
 .nav-backdrop.active {
-    display: block;
+  display: block;
 }
 
 /* =========================
@@ -203,90 +215,92 @@ nav a.active::after {
    that stacks the header cannot break the burger layout)
    ========================= */
 @media (max-width: 768px) {
-    .burger {
-        display: flex;
-    }
+  .burger {
+    display: flex;
+  }
 
-    header {
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        gap: 0 !important;
-        padding: 10px 20px !important;
-        position: sticky;
-        top: 0;
-    }
+  header {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 0 !important;
+    padding: 10px 20px !important;
+    position: sticky;
+    top: 0;
+  }
 
-    .logo img {
-        height: 38px;
-    }
+  .logo img {
+    height: 38px;
+  }
 
-    #mainNav {
-        display: none;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 2px;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        transform: none;
-        padding: 10px 12px 16px;
-        background: var(--blue-dark);
-        border-top: 1px solid rgba(202, 220, 252, 0.14);
-        box-shadow: 0 16px 32px rgba(8, 8, 56, 0.35);
-        z-index: 99;
-        animation: navSlideDown 0.25s ease;
-    }
+  #mainNav {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    justify-self: stretch; /* undo the desktop centering so the dropdown spans the full width */
+    gap: 2px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    transform: none;
+    padding: 10px 12px 16px;
+    background: var(--blue-dark);
+    border-top: 1px solid rgba(202, 220, 252, 0.14);
+    box-shadow: 0 16px 32px rgba(8, 8, 56, 0.35);
+    z-index: 99;
+    animation: navSlideDown 0.25s ease;
+  }
 
-    #mainNav.nav-open {
-        display: flex;
-    }
+  #mainNav.nav-open {
+    display: flex;
+  }
 
-    #mainNav a {
-        margin: 0 !important;
-        padding: 13px 16px;
-        border-radius: var(--radius-sm);
-        font-size: 15px !important;
-        color: var(--blue-pale) !important;
-        text-decoration: none !important;
-        border-bottom: none !important;
-    }
+  #mainNav a {
+    margin: 0 !important;
+    padding: 13px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 15px !important;
+    color: var(--blue-pale) !important;
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
 
-    #mainNav a:hover,
-    #mainNav a.active {
-        background: rgba(255, 255, 255, 0.09);
-        color: var(--white) !important;
-    }
+  #mainNav a:hover,
+  #mainNav a.active {
+    background: rgba(255, 255, 255, 0.09);
+    color: var(--white) !important;
+  }
 
-    #mainNav a.active::after {
-        left: 16px;
-        right: auto;
-        width: 24px;
-        bottom: 7px;
-    }
+  #mainNav a.active::after {
+    left: 16px;
+    right: auto;
+    width: 24px;
+    bottom: 7px;
+  }
 
-    .header-actions {
-        order: 2;
-        gap: 6px;
-        margin-left: auto;
-    }
+  .header-actions {
+    order: 2;
+    gap: 6px;
+    margin-left: auto;
+  }
 
-    .burger {
-        order: 3;
-        margin-left: 8px;
-    }
+  .burger {
+    order: 3;
+    margin-left: 8px;
+  }
 
-    .apply-now {
-        min-height: 34px;
-        font-size: 11px;
-    }
-
-    .apply-now { padding: 0 10px; }
+  .apply-now {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 11px;
+  }
 }
 
 @keyframes navSlideDown {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -13,30 +13,32 @@ Khmer InternSphere started as a static site in INFO 250 (Web Development I). In 
 
 ## Team (Group 7)
 
-| Name |
-|------|
+| Name                 |
+| -------------------- |
 | CHAMROUEN Sovanmealy |
-| LY Mengchou |
-| SOMANG Sochannimol |
-| TAN Chanleaksmy |
+| LY Mengchou          |
+| SOMANG Sochannimol   |
+| TAN Chanleaksmy      |
 
 ### Responsibilities
 
-| Member | Role | Main files |
-|--------|------|------------|
-| 1 | Listings, Companies, About | `internships.html`, `companies.html`, `about.html`, `js/internships.js`, `js/companies.js`, `css/internship.css`, `css/company.css`, `css/about.css` |
-| 2 | Detail view, map, contact form | `js/detail-map.js`, `js/contact.js`, `css/modal_new.css`, `css/contact.css` |
-| 3 | API client, bookmarks, home page, site consistency | `js/config.js`, `js/api-client.js`, `js/card.js`, `js/main.js`, `js/saved.js`, `js/latest.js`, `data/internships.json`, `css/style.css`, `css/nav.css`, `css/footer.css`, `css/theme.css`, `css/home.css`, `css/latest.css`, `css/saved.css`, `css/features.css`, `css/ui-fixes.css`, `css/listing-fix.css` |
-| 4 | Applications, tracker, final report | `js/applications.js`, `js/tracker.js`, `css/tracker.css`, `README.md` |
+| Member | Role                                               | Main files                                                                                                                                                                                                                                                                                                  |
+| ------ | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1      | Listings, Companies, About                         | `internships.html`, `companies.html`, `about.html`, `js/internships.js`, `js/companies.js`, `css/internship.css`, `css/company.css`, `css/about.css`                                                                                                                                                        |
+| 2      | Detail view, map, contact form                     | `js/detail-map.js`, `js/contact.js`, `css/modal_new.css`, `css/contact.css`                                                                                                                                                                                                                                 |
+| 3      | API client, bookmarks, home page, site consistency | `js/config.js`, `js/api-client.js`, `js/card.js`, `js/main.js`, `js/saved.js`, `js/latest.js`, `data/internships.json`, `css/style.css`, `css/nav.css`, `css/footer.css`, `css/theme.css`, `css/home.css`, `css/latest.css`, `css/saved.css`, `css/features.css`, `css/ui-fixes.css`, `css/listing-fix.css` |
+| 4      | Applications, tracker, final report                | `js/applications.js`, `js/tracker.js`, `css/tracker.css`, `README.md`                                                                                                                                                                                                                                       |
 
 ---
 
 ## Features
 
 ### Pages
+
 Home, Internships, Companies, About and Contact. All pages share the same header, navigation, active-link state and footer.
 
 ### Dynamic internship listings
+
 - The default list is **Cambodia Internships**, loaded with `fetch()` and `async/await` from `data/internships.json`. Every entry links to its original posting, and entries past their `deadline` are hidden automatically.
 - A **Source** dropdown switches to **International Remote**, which uses the Remotive API. The two sources are never mixed.
 - Cards show the company logo, title, company, location and category, and are rendered with template literals (`js/card.js`).
@@ -45,18 +47,21 @@ Home, Internships, Companies, About and Contact. All pages share the same header
 - Cards can be opened through a deep link.
 
 ### Internship detail view with map
+
 - Clicking a card opens a modal with the full description, company, location, category, date and an Apply link.
 - A Leaflet map with an OpenStreetMap marker shows where the internship is based.
 - Locations are converted to coordinates with Nominatim, cached by address and limited to 1 request per second. A failed lookup is retried the next time the modal opens.
 - Locations that cannot be mapped (for example "Worldwide") show a fallback message instead of a map.
 
 ### Save / bookmark internships
+
 - Save and unsave from the cards and from the detail modal (POST and DELETE).
 - Saved items persist across page reloads (GET on page load).
 - The button is disabled while a request is running, so fast double-clicks do not create duplicates.
 - A "Saved Internships" section lists saved items with a Remove button (with a confirm dialog) and an empty state.
 
-### Application system and tracker *(Member 4, to add)*
+### Application system and tracker _(Member 4, to add)_
+
 - Validated application form: name, email, resume link (valid URL) and a message of at least 20 characters, with inline errors.
 - Applications are submitted with POST, and a second application to the same job is blocked.
 - The tracker lists all applications with colored status badges: Submitted, Under Review, Accepted and Rejected.
@@ -65,15 +70,19 @@ Home, Internships, Companies, About and Contact. All pages share the same header
 - `internships.html` already has an empty `#tracker-section` for this feature.
 
 ### Companies
+
 Companies are built from the live listing data instead of static content. Each company card shows its logo, name and number of open roles, and opens a modal listing its open internships.
 
 ### Contact form validation
+
 Required fields, email format and Cambodian phone format (`+855...` or `0xx...`), with real-time inline error messages, a success message and a form reset.
 
 ### Home page
+
 Hero section, statistics, a scrolling logo slider, a "Latest Internships" section with live listings and a "View all" link, and a responsive burger menu on mobile.
 
 ### Code quality
+
 ES6 throughout (`const`/`let`, arrow functions, template literals, `.map()`, `.filter()`, `.reduce()`), `try/catch` on every request, loading indicators and friendly error messages, and no API URLs outside `config.js`.
 
 ---
@@ -82,18 +91,18 @@ ES6 throughout (`const`/`let`, arrow functions, template literals, `.map()`, `.f
 
 The Internships, Companies and Home pages read through one function, `getInternshipFeed()` in `js/api-client.js`. It has two sources, and they are never mixed:
 
-| Source | Used when | Where the data comes from |
-|--------|-----------|---------------------------|
-| **Cambodia** (default) | `CONFIG.DEFAULT_SOURCE = 'cambodia'` | `data/internships.json`, a hand-checked list. Every entry links to its original posting, and entries past their `deadline` are hidden automatically. |
-| **International Remote** | "Source" dropdown on `internships.html` | The Remotive API. The answer is cached in `localStorage` for 6 hours, because Remotive allows only a few requests per day. |
+| Source                   | Used when                               | Where the data comes from                                                                                                                            |
+| ------------------------ | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Cambodia** (default)   | `CONFIG.DEFAULT_SOURCE = 'cambodia'`    | `data/internships.json`, a hand-checked list. Every entry links to its original posting, and entries past their `deadline` are hidden automatically. |
+| **International Remote** | "Source" dropdown on `internships.html` | The Remotive API. The answer is cached in `localStorage` for 6 hours, because Remotive allows only a few requests per day.                           |
 
 ### Services used
 
-| Service | Method | Endpoint | Used for |
-|---------|--------|----------|----------|
-| [Remotive](https://github.com/remotive-io/remote-jobs-api) | GET | `https://remotive.com/api/remote-jobs` | Optional International Remote feed |
-| [Nominatim (OpenStreetMap)](https://operations.osmfoundation.org/policies/nominatim/) | GET | `https://nominatim.openstreetmap.org/search?q=...&format=json&limit=1` | Convert a job location into map coordinates |
-| [restful-api.dev](https://restful-api.dev/) | GET, POST, PUT, DELETE | `https://api.restful-api.dev/objects` and `/objects/{id}` | Saved internships and applications |
+| Service                                                                               | Method                 | Endpoint                                                               | Used for                                    |
+| ------------------------------------------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------- | ------------------------------------------- |
+| [Remotive](https://github.com/remotive-io/remote-jobs-api)                            | GET                    | `https://remotive.com/api/remote-jobs`                                 | Optional International Remote feed          |
+| [Nominatim (OpenStreetMap)](https://operations.osmfoundation.org/policies/nominatim/) | GET                    | `https://nominatim.openstreetmap.org/search?q=...&format=json&limit=1` | Convert a job location into map coordinates |
+| [restful-api.dev](https://restful-api.dev/)                                           | GET, POST, PUT, DELETE | `https://api.restful-api.dev/objects` and `/objects/{id}`              | Saved internships and applications          |
 
 Leaflet 1.9.4 with OpenStreetMap tiles (loaded from unpkg) draws the map. It is a library, not one of the three APIs.
 
@@ -102,9 +111,25 @@ Leaflet 1.9.4 with OpenStreetMap tiles (loaded from unpkg) draws the map. It is 
 Both sources are normalized to the same shape, so every feature works with either one:
 
 ```js
-{ id, title, company, location, category, jobType, logo, url, description, date,
-  // Cambodia list only:
-  deadline, salary, verifiedOn, source, origin, applyLabel }
+{
+  (id,
+    title,
+    company,
+    location,
+    category,
+    jobType,
+    logo,
+    url,
+    description,
+    date,
+    // Cambodia list only:
+    deadline,
+    salary,
+    verifiedOn,
+    source,
+    origin,
+    applyLabel);
+}
 ```
 
 ### How the data flows
@@ -119,10 +144,10 @@ Both sources are normalized to the same shape, so every feature works with eithe
 restful-api.dev is a shared public service, so every record is tagged with the team prefix `KIS-` and is filtered by that prefix when listing. All calls go through `js/api-client.js`:
 
 ```js
-const saved = await apiGet('saved');                  // list our records
-const rec   = await apiPost('saved', { jobId, title });  // create
-await apiPut(rec.id, 'application', { status: 'Under Review' }); // update
-await apiDelete(rec.id);                              // delete
+const saved = await apiGet("saved"); // list our records
+const rec = await apiPost("saved", { jobId, title }); // create
+await apiPut(rec.id, "application", { status: "Under Review" }); // update
+await apiDelete(rec.id); // delete
 ```
 
 `type` is a short word such as `saved` or `application`, and the prefix is added automatically. Records look like `{ id, name, data }`.
@@ -187,21 +212,21 @@ Items marked **(to add)** belong to Member 4 and were not in the project folder 
 
 Scripts go at the end of `<body>`. `config.js` always loads first, and `card.js` loads before anything that renders cards.
 
-| Page | Scripts, in order |
-|------|-------------------|
+| Page               | Scripts, in order                                                                                          |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- |
 | `internships.html` | `config.js`, `api-client.js`, `card.js`, Leaflet, `internships.js`, `detail-map.js`, `saved.js`, `main.js` |
-| `home.html` | `config.js`, `api-client.js`, `card.js`, Leaflet, `detail-map.js`, `saved.js`, `main.js`, `latest.js` |
-| `companies.html` | `config.js`, `api-client.js`, `companies.js`, `main.js` |
-| `contact.html` | `config.js`, `api-client.js`, `contact.js`, `main.js` |
-| `about.html` | `config.js`, `api-client.js`, `main.js` |
+| `home.html`        | `config.js`, `api-client.js`, `card.js`, Leaflet, `detail-map.js`, `saved.js`, `main.js`, `latest.js`      |
+| `companies.html`   | `config.js`, `api-client.js`, `companies.js`, `main.js`                                                    |
+| `contact.html`     | `config.js`, `api-client.js`, `contact.js`, `main.js`                                                      |
+| `about.html`       | `config.js`, `api-client.js`, `main.js`                                                                    |
 
-| Page | Styles, in order |
-|------|------------------|
-| `home.html` | `style.css`, `nav.css`, `home.css`, `latest.css`, `saved.css`, `features.css`, Leaflet, `footer.css`, `theme.css`, `ui-fixes.css` |
+| Page               | Styles, in order                                                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `home.html`        | `style.css`, `nav.css`, `home.css`, `latest.css`, `saved.css`, `features.css`, Leaflet, `footer.css`, `theme.css`, `ui-fixes.css`                |
 | `internships.html` | `internship.css`, `modal_new.css`, Leaflet, `nav.css`, `saved.css`, `features.css`, `footer.css`, `theme.css`, `listing-fix.css`, `ui-fixes.css` |
-| `companies.html` | `company.css`, `features.css`, `nav.css`, `footer.css`, `theme.css` |
-| `contact.html` | `contact.css`, `features.css`, `nav.css`, `footer.css`, `theme.css` |
-| `about.html` | `about.css`, `nav.css`, `footer.css`, `theme.css` |
+| `companies.html`   | `company.css`, `features.css`, `nav.css`, `footer.css`, `theme.css`                                                                              |
+| `contact.html`     | `contact.css`, `features.css`, `nav.css`, `footer.css`, `theme.css`                                                                              |
+| `about.html`       | `about.css`, `nav.css`, `footer.css`, `theme.css`                                                                                                |
 
 Every page ends with `nav.css`/`footer.css`/`theme.css` or later, and `ui-fixes.css` always loads last because it overrides earlier rules.
 
@@ -261,12 +286,12 @@ Add or edit entries in `data/internships.json` by hand. Each entry should link t
 
 ## References
 
-- Leaflet. (n.d.). *Leaflet: An open-source JavaScript library for interactive maps*. https://leafletjs.com/
-- MDN Web Docs. (2025, August 20). *Using the Fetch API*. Mozilla. https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-- OpenStreetMap Foundation. (n.d.). *Nominatim usage policy (aka geocoding policy)*. https://operations.osmfoundation.org/policies/nominatim/
-- osm-search. (n.d.). *Nominatim: Open source search based on OpenStreetMap data*. GitHub. https://github.com/osm-search/Nominatim
-- Remotive. (n.d.). *Remote Jobs Public API*. GitHub. https://github.com/remotive-io/remote-jobs-api
-- RESTful API. (n.d.). *Free REST API - Full CRUD support (GET, POST, PUT, PATCH, DELETE) for testing & learning*. https://restful-api.dev/
+- Leaflet. (n.d.). _Leaflet: An open-source JavaScript library for interactive maps_. https://leafletjs.com/
+- MDN Web Docs. (2025, August 20). _Using the Fetch API_. Mozilla. https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+- OpenStreetMap Foundation. (n.d.). _Nominatim usage policy (aka geocoding policy)_. https://operations.osmfoundation.org/policies/nominatim/
+- osm-search. (n.d.). _Nominatim: Open source search based on OpenStreetMap data_. GitHub. https://github.com/osm-search/Nominatim
+- Remotive. (n.d.). _Remote Jobs Public API_. GitHub. https://github.com/remotive-io/remote-jobs-api
+- RESTful API. (n.d.). _Free REST API - Full CRUD support (GET, POST, PUT, PATCH, DELETE) for testing & learning_. https://restful-api.dev/
 
 ---
 
