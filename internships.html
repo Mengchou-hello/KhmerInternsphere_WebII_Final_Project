@@ -1,106 +1,174 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Khmer InternSphere</title>
-    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="./css/internship.css">
-    <link rel="stylesheet" href="./css/nav.css">
-    <link rel="stylesheet" href="css/saved.css">
-    <link rel="stylesheet" href="./css/footer.css">
-    <link rel="stylesheet" href="./css/theme.css">
-</head>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/internship.css" />
+    <link rel="stylesheet" href="./css/modal_new.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="css/saved.css" />
+    <link rel="stylesheet" href="./css/nav.css" />
+  </head>
 
-<body>
+  <body>
     <header>
-        <div class="logo">
-            <a href="home.html" aria-label="Khmer InternSphere home">
-                <img src="./img/logo.png" alt="Khmer InternSphere Logo">
-            </a>
-        </div>
-        <button class="burger" id="burgerBtn" aria-label="Toggle navigation" aria-expanded="false">
-            <span></span><span></span><span></span>
-        </button>
-        <nav id="mainNav">
-            <a href="home.html" data-i18n="home">Home</a>
-            <a href="internships.html" data-i18n="internships">Internships</a>
-            <a href="companies.html" data-i18n="companies">Companies</a>
-            <a href="about.html" data-i18n="about">About</a>
-            <a href="contact.html" data-i18n="contact">Contact</a>
-        </nav>
-        <div class="header-actions">
-            <a class="apply-now" href="internships.html#internshipGrid" data-i18n="applyNow">Apply Now</a>
-        </div>
+      <div class="logo">
+        <a href="home.html" aria-label="Khmer InternSphere home">
+          <img src="./img/logo.png" alt="Khmer InternSphere Logo" />
+        </a>
+      </div>
+      <button
+        class="burger"
+        id="burgerBtn"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+      >
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="mainNav">
+        <a href="home.html" data-i18n="home">Home</a>
+        <a href="internships.html" data-i18n="internships">Internships</a>
+        <a href="companies.html" data-i18n="companies">Companies</a>
+        <a href="about.html" data-i18n="about">About</a>
+        <a href="contact.html" data-i18n="contact">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a
+          class="apply-now"
+          href="internships.html#internshipGrid"
+          data-i18n="applyNow"
+          >Apply Now</a
+        >
+      </div>
     </header>
     <div class="nav-backdrop" id="navBackdrop"></div>
-    <!-- put ur code here  -->
-
+    <!-- put ur code here -->
 
     <!-- Hero section -->
     <section class="page-hero">
-        <div class="container hero-inner">
-            <h2 data-i18n="internshipsHero">Find your perfect internship in Cambodia</h2>
-            <p>Connect with top companies and build real-world skills. Start your journey
-                with Khmer InternSphere.</p>
-        </div>
+      <div class="container hero-inner">
+        <h2 data-i18n="internshipsHero">
+          Find your perfect internship in Cambodia
+        </h2>
+        <p>
+          Connect with top companies and build real-world skills. Start your
+          journey with Khmer InternSphere.
+        </p>
+      </div>
     </section>
 
-    <div class="container">
-        <!-- Filter & search bar -->
-        <div class="filter-section">
-            <div class="filter-tabs" id="filterTabs">
-                <div class="filter-chip active" data-filter="all">All internships</div>
-                <div class="filter-chip" data-filter="IT & Tech"> IT & Tech</div>
-                <div class="filter-chip" data-filter="Marketing"> Marketing</div>
-                <div class="filter-chip" data-filter="Finance"> Finance</div>
-                <div class="filter-chip" data-filter="Hospitality"> Hospitality</div>
-
-            </div>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search by title, company or location...">
-                <button id="searchBtn">Search</button>
-            </div>
-        </div>
-
-        <!-- Internship cards grid -->
-        <div id="internshipGrid" class="internship-grid">
-            <!-- dynamic cards will be injected here by JS -->
-        </div>
-    </div>
+    <main class="container">
+      <section class="listing-controls" aria-label="Internship filters">
+        <label class="listing-search" for="internship-search"
+          >Search internships
+          <input
+            id="internship-search"
+            type="search"
+            placeholder="Title, company, location, or category"
+            autocomplete="off"
+          />
+        </label>
+        <label
+          >Source
+          <select id="source-filter">
+            <option value="cambodia" selected>Cambodia Internships</option>
+            <option value="remote">International Remote (Remotive)</option>
+          </select></label
+        >
+        <label
+          >Location
+          <select id="location-filter">
+            <option value="">All locations</option>
+          </select></label
+        >
+        <label
+          >Category
+          <select id="category-filter">
+            <option value="">All categories</option>
+          </select></label
+        >
+        <button type="button" id="clear-filters" class="listing-clear">
+          Clear filters
+        </button>
+      </section>
+      <p id="results-count" class="results-count" aria-live="polite">
+        Loading internships…
+      </p>
+      <div id="internship-loading" class="listing-state" role="status">
+        <span class="listing-spinner" aria-hidden="true"></span>Loading
+        internships…
+      </div>
+      <div
+        id="internship-error"
+        class="listing-state listing-state--error"
+        role="alert"
+        hidden
+      >
+        <p id="internship-error-text"></p>
+        <button type="button" id="internship-retry">Retry</button>
+      </div>
+      <div id="internship-empty" class="listing-state" hidden>
+        No internships match these filters. Try clearing them.
+      </div>
+      <section
+        id="internshipGrid"
+        class="internship-grid"
+        aria-live="polite"
+        hidden
+      ></section>
+      <section id="saved-section" aria-live="polite"></section>
+      <section id="tracker-section" aria-label="Application tracker"></section>
+    </main>
 
     <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <a class="footer-logo" href="home.html" aria-label="Khmer InternSphere home">
-                    <img src="./img/logo.png" alt="Khmer InternSphere">
-                </a>
-                <p>Connecting Cambodian students with meaningful internship opportunities and career-ready experience.</p>
-            </div>
-            <div class="footer-links">
-                <h2>Explore</h2>
-                <a href="internships.html">Internships</a>
-                <a href="companies.html">Partner Companies</a>
-                <a href="about.html">About Us</a>
-            </div>
-            <address class="footer-contact">
-                <h2>Get in touch</h2>
-                <a href="mailto:info@khmerintersphere.com">info@khmerintersphere.com</a>
-                <a href="tel:+855168168">+855 168 168</a>
-                <a href="contact.html">Contact our team</a>
-            </address>
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a
+            class="footer-logo"
+            href="home.html"
+            aria-label="Khmer InternSphere home"
+          >
+            <img src="./img/logo.png" alt="Khmer InternSphere" />
+          </a>
+          <p>
+            Connecting Cambodian students with meaningful internship
+            opportunities and career-ready experience.
+          </p>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Khmer InternSphere. All rights reserved.</p>
-            <p>Building Cambodia's future talent.</p>
+        <div class="footer-links">
+          <h2>Explore</h2>
+          <a href="internships.html">Internships</a>
+          <a href="companies.html">Partner Companies</a>
+          <a href="about.html">About Us</a>
         </div>
+        <address class="footer-contact">
+          <h2>Get in touch</h2>
+          <a href="mailto:info@khmerintersphere.com"
+            >info@khmerintersphere.com</a
+          >
+          <a href="tel:+855168168">+855 168 168</a>
+          <a href="contact.html">Contact our team</a>
+        </address>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Khmer InternSphere. All rights reserved.</p>
+        <p>Building Cambodia's future talent.</p>
+      </div>
     </footer>
 
-</body>
-<script src="js/config.js"></script>
-<script src="js/api-client.js"></script>
-<script src="js/internships.js"></script>  <!-- Member 1 -->
-<script src="js/saved.js"></script>        <!-- you -->
-<script src="js/main.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api-client.js?v=4"></script>
+    <script src="js/card.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/internships.js"></script>
+    <script src="js/detail-map.js"></script>
+    <script src="js/saved.js?v=4"></script>
+    <script src="js/main.js"></script>
+  </body>
 </html>
