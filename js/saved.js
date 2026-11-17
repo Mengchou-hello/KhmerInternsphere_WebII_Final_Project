@@ -296,23 +296,30 @@
   }
   async function fetchRecords(attempts = 1) {
     let lastErr;
+    const valid = (rows) =>
+      rows.filter((r) => r && r.id != null && r.data && r.data.jobId != null);
     for (let i = 0; i < attempts; i++) {
       try {
-        let rows;
-        try {
-          rows = await apiGet("saved");
-          if (!Array.isArray(rows))
-            throw new Error(
-              "Unexpected reply from the saved-internships service.",
-            );
-          writeIds(rows.map((r) => r.id));
-        } catch (listErr) {
-          if (![403, 404, 405].includes(statusOf(listErr))) throw listErr;
-          rows = await listByIds(readIds());
+        // 1) Ask for OUR records by id first: small, fast, and it survives a refresh
+        //    even when the shared list-all call is slow, truncated or blocked.
+        const ids = readIds();
+        let rows = [];
+        if (ids.length) {
+          try {
+            rows = valid(await listByIds(ids));
+          } catch (idErr) {
+            if (statusOf(idErr) === 429) throw idErr;
+            rows = [];
+          }
         }
-        return rows.filter(
-          (r) => r && r.id != null && r.data && r.data.jobId != null,
-        );
+        // 2) Nothing found by id (new browser, cleared storage): fall back to list-all.
+        if (!rows.length) {
+          rows = valid(await apiGet("saved"));
+        }
+        // Only ADD ids. Never overwrite the index with a shorter list, or one bad
+        // reply would wipe every remembered bookmark.
+        writeIds([...readIds(), ...rows.map((r) => r.id)]);
+        return rows;
       } catch (err) {
         lastErr = err;
         if (statusOf(err) >= 400 && statusOf(err) < 500) break; // permanent / rate-limit: retrying only wastes requests
