@@ -12,6 +12,7 @@
     let modalJob = null
     const esc = window.KISCard.esc
     const pending = new Set()
+    let confirmOpen = false
 
 
     // helpers
@@ -95,6 +96,7 @@
         nextStatuses: (status) => TRANSITIONS[status] ?? [],
         isPending: (jobKey) => pending.has(jobKey),
         openFromRecord: (jobKey) => openFromRecord(jobKey),
+        withdraw,
 
     }
 
@@ -221,9 +223,12 @@
             </div>
 
             <div class="app-form__actions">
+                ${existing ? `<button type="button" class="app-withdraw-btn">Withdraw</button>` : ""}
                 <button type="button" class="app-cancel-btn">Cancel</button>
                 <button type="submit" class="app-submit-btn">${existing ? "Save changes" : "Submit"}</button>
             </div>
+
+            
         </form>`
 
         if (existing) {
@@ -254,6 +259,111 @@
         }
     }
 
+    // form validation
+    const NAME_RE = /^\p{L}[\p{L}\p{M}\s'.-]*$/u
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+    const PHONE_RE = /^\+?[\d\s().-]+$/
+
+    const todayStr = () =>
+        new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10)
+
+    // order here = order the form is checked, and the first bad field gets focus
+    const VALIDATORS = {
+        fullName: (el) => {
+            const v = el.value.trim()
+            if (!v) return "Enter your full name."
+            if (v.length < 2) return "Your name must be at least 2 characters."
+            if (!NAME_RE.test(v)) return "Use letters, spaces, hyphens or apostrophes only."
+            return ""
+        },
+        email: (el) => {
+            const v = el.value.trim()
+            if (!v) return "Enter your email address."
+            if (!EMAIL_RE.test(v)) return "Enter a valid email, e.g. name@example.com."
+            return ""
+        },
+        tel: (el) => {
+            const v = el.value.trim()
+            const digits = v.replace(/\D/g, "")
+            if (!v) return "Enter your phone number."
+            if (!PHONE_RE.test(v) || digits.length < 8 || digits.length > 15)
+                return "Enter a valid phone number, e.g. +855 12 345 678."
+            return ""
+        },
+        university: (el) => {
+            const v = el.value.trim()
+            if (!v) return "Enter your university."
+            if (v.length < 2) return "University name is too short."
+            return ""
+        },
+        major: (el) => (el.value.trim().length > 80 ? "Major must be 80 characters or fewer." : ""),
+        availability: (el) => {
+            const v = el.value
+            if (!v) return ""
+            const stored = applications.get(keyOf(currentJob?.id, currentJob?.origin))?.data.applicant?.availability
+            if (v < todayStr() && v !== stored) return "Choose today or a future date."
+            if (v > "2100-01-01") return "Enter a valid date."
+            return ""
+        },
+        coverLetter: (el) =>
+            el.value.length > 1000 ? "Cover letter must be 1000 characters or fewer." : "",
+        cv: (el) => {
+            const file = el.files[0]
+            if (!file) return el.required ? "Attach your CV as a PDF." : ""
+            const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
+            if (!isPdf) return "Please choose a PDF file."
+            if (file.size === 0) return "That file is empty."
+            if (file.size > 2 * 1024 * 1024) return "The file must be 2 MB or smaller."
+            return ""
+        },
+        cvLink: (el) => {
+            const v = el.value.trim()
+            return v && !isHttpUrl(v) ? "Enter a valid link starting with https://" : ""
+        },
+        consent: (el) => (el.checked ? "" : "Please confirm your details are correct."),
+    }
+
+    const errorBoxOf = (el) => {
+        const group = el.closest(".form-group")
+        let box = group.querySelector(".app-field-error")
+        if (!box) {
+            box = document.createElement("p")
+            box.className = "app-field-error"
+            box.id = `${el.id}-error`
+            group.appendChild(box)
+        }
+        return box
+    }
+
+    const validateField = (el) => {
+        const rule = VALIDATORS[el.name]
+        if (!rule || el.disabled) return true
+        const msg = rule(el)
+        const box = errorBoxOf(el)
+        el.setCustomValidity(msg)
+        box.textContent = msg
+        el.classList.toggle("is-invalid", !!msg)
+        if (msg) {
+            el.setAttribute("aria-invalid", "true")
+            el.setAttribute("aria-describedby", box.id)
+        } else {
+            el.removeAttribute("aria-invalid")
+            el.removeAttribute("aria-describedby")
+        }
+        return !msg
+    }
+
+    const validateForm = (form) => {
+        let firstBad = null
+        for (const name of Object.keys(VALIDATORS)) {
+            const el = form.elements[name]
+            if (el && !validateField(el) && !firstBad) firstBad = el
+        }
+        form.querySelector(".app-errors").textContent = firstBad ? "Please fix the highlighted fields." : ""
+        firstBad?.focus()
+        return !firstBad
+    }
+
     // application form modal
     const buildApplicationModal = () => {
         document.body.insertAdjacentHTML(
@@ -275,6 +385,9 @@
 
         applicationModal.addEventListener("click", (e) =>{
             if (e.target.closest(".app-cancel-btn")) closeApplicationModal()
+            if (e.target.closest(".app-withdraw-btn") && currentJob) {
+                withdraw(keyOf(currentJob.id, currentJob.origin))
+            }
         })
 
       
@@ -282,40 +395,39 @@
             const form = e.target
             if (form.id !== "application-form") return
             e.preventDefault()
-            if (!form.checkValidity()) {
-                form.reportValidity()
-                return
-            }
+            if (!validateForm) return
             submitApplication(readForm(form), form)
         })
         
 
 
-        applicationModal.addEventListener("change", (e) =>{
-            const input = e.target
+        // validate when the user leaves a text field
+        applicationModal.addEventListener("focusout", (e) => {
+            const el = e.target
+            if (el.name in VALIDATORS && !["file", "checkbox"].includes(el.type)) validateField(el)
+        })
 
-            // CV file: PDF only, 2 MB max
-            if (input.id === "cv") {
-                const cvInfo = document.getElementById("cv-info")
-                const file = input.files[0]
-                if (!file) {
-                    input.setCustomValidity("")
-                    cvInfo.textContent = ""
-                    return
-                }
-                const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
-                const smallEnough = file.size <= 2 * 1024 * 1024
-                if (!isPdf) input.setCustomValidity("Please choose a PDF file")
-                else if (!smallEnough) input.setCustomValidity("The file must be 2 MB or smaller")
-                else input.setCustomValidity("")
-                // validationMessage is the custom message above, or "" when the file is fine
-                cvInfo.textContent = input.validationMessage || `${file.name} (${Math.round(file.size / 1024)} KB)`
-                return
+        // once a field is marked invalid, re-check on every keystroke so the error clears as they fix it
+        applicationModal.addEventListener("input", (e) => {
+            const el = e.target
+            if (el.classList.contains("is-invalid")) validateField(el)
+            if (el.id === "cover-letter") {
+                const counter = document.getElementById("cover-counter")
+                if (counter) counter.textContent = `${form.elements.coverLetter.value.length} / 1000`
             }
+        })
 
-            // CV link: optional, but if filled it must be http(s)
-            if (input.id === "cv-link") {
-                input.setCustomValidity(input.value && !isHttpUrl(input.value) ? "Enter a valid https link" : "")
+        // files, checkbox and date pickers fire change, not blur
+        applicationModal.addEventListener("change", (e) => {
+            const el = e.target
+            if (!(el.name in VALIDATORS)) return
+            const ok = validateField(el)
+            if (el.id === "cv") {
+                const file = el.files[0]
+                if (file) {
+                    document.getElementById("cv-info").textContent =
+                        ok ? `${file.name} (${Math.round(file.size / 1024)} KB)` : ""
+                }
             }
         })
 
@@ -410,13 +522,14 @@
             const rec = await apiPost("application", data)
             if (!rec || rec.id == null) throw new Error("The server did not confirm your application.")
             applications.set(jobKey, {serverId: rec.id, data})
-            document.dispatchEvent(new CustomEvent("applications:changed"))
+            // document.dispatchEvent(new CustomEvent("applications:changed"))
             toast("Application submitted", "ok")
             closeApplicationModal()
         } catch (err) {
             form.querySelector(".app-errors").textContent = friendly(err)
         } finally {
             pending.delete(jobKey)
+            document.dispatchEvent(new CustomEvent("applications:changed"))
             submitBtn.disabled = false
             submitBtn.textContent = "Submit"
         }
@@ -431,6 +544,115 @@
         rejected: [],
     }
     const changed = () => document.dispatchEvent(new CustomEvent("applications:changed"))
+
+
+    function confirmWithdraw(data) {
+        if (confirmOpen) return Promise.resolve(false)
+        confirmOpen = true
+        return new Promise((resolve) => {
+            const previous = document.activeElement
+            const overlay = document.createElement("div")
+            overlay.className = "kis-confirm"
+            overlay.setAttribute("role", "alertdialog")
+            overlay.setAttribute("aria-modal", "true")
+            overlay.setAttribute("aria-labelledby", "kis-confirm-title")
+            overlay.setAttribute("aria-describedby", "kis-confirm-text")
+            overlay.innerHTML = `
+                <div class="kis-confirm__box">
+                    <h2 class="kis-confirm__title" id="kis-confirm-title">Withdraw application?</h2>
+                    <p class="kis-confirm__text" id="kis-confirm-text"></p>
+                    <div class="kis-confirm__actions">
+                        <button type="button" class="kis-confirm__btn kis-confirm__btn--cancel">Keep application</button>
+                        <button type="button" class="kis-confirm__btn kis-confirm__btn--danger"><span>Yes, withdraw</span></button>
+                    </div>
+                </div>`
+            const name = data && data.title ? `"${data.title}"` : "this internship"
+            overlay.querySelector("#kis-confirm-text").textContent =
+                `Withdraw your application to ${name}? Its progress will be deleted. You can apply again later.`
+            document.body.appendChild(overlay)
+
+            const [cancelBtn, withdrawBtn] = overlay.querySelectorAll(".kis-confirm__btn")
+            const finish = (result) => {
+                document.removeEventListener("keydown", onKey, true)
+                overlay.remove()
+                confirmOpen = false
+                if (previous && previous.focus) previous.focus()
+                resolve(result)
+            }
+            function onKey(e) {
+                if (e.key === "Escape") {
+                    e.preventDefault()
+                    e.stopPropagation()          // so the form modal underneath doesn't also close
+                    finish(false)
+                    return
+                }
+                if (e.key === "Tab") {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    ;(document.activeElement === cancelBtn ? withdrawBtn : cancelBtn).focus()
+                }
+            }
+            document.addEventListener("keydown", onKey, true)
+            overlay.addEventListener("click", (e) => { if (e.target === overlay) finish(false) })
+            cancelBtn.addEventListener("click", () => finish(false))
+            withdrawBtn.addEventListener("click", () => finish(true))
+            cancelBtn.focus()                    // safest default: keep the application
+        })
+    }
+
+    // after a re-render the focused button may be gone, so put focus somewhere sensible
+    function restoreFocus(jobKey) {
+        if (document.activeElement && document.activeElement !== document.body) return
+        const btn = [...document.querySelectorAll('[data-withdraw-job]')]
+            .find((b) => b.dataset.key === jobKey)
+        const target = btn || document.querySelector("#tracker-section .application-section-title")
+        if (!target) return
+        if (!target.matches("button, a, input")) target.tabIndex = -1
+        target.focus()
+    }
+
+    async function withdraw(jobKey) {
+        const entry = applications.get(jobKey)
+        if (!entry) return { ok: false, reason: "not-found" }
+        if (pending.has(jobKey)) return { ok: false, reason: "busy" }
+
+        if (!(await confirmWithdraw(entry.data))) return { ok: false, reason: "cancelled" }
+
+        // the state may have changed while the dialog was open
+        if (!applications.has(jobKey) || pending.has(jobKey)) return { ok: false, reason: "busy" }
+
+        pending.add(jobKey)
+        changed()                                   // lets the buttons show as busy
+
+        let failed = false
+        try {
+            await apiDelete(entry.serverId)         // server id, not the job key
+        } catch (err) {
+            if (!isNotFound(err)) {                 // 404 = already gone, which counts as success
+                failed = true
+                const msg = `Could not withdraw the application. ${friendly(err)}`
+                toast(msg)
+                const box = applicationModal?.classList.contains("is-open")
+                    ? applicationModal.querySelector(".app-errors") : null
+                if (box) box.textContent = msg
+            }
+        }
+        pending.delete(jobKey)
+
+        if (failed) {                               // keep the record, nothing was deleted
+            changed()
+            restoreFocus(jobKey)
+            return { ok: false, reason: "error" }
+        }
+
+        applications.delete(jobKey)                 // only remove locally after the server confirms
+        changed()
+        toast("Application withdrawn", "ok")
+        if (currentJob && keyOf(currentJob.id, currentJob.origin) === jobKey) closeApplicationModal()
+        restoreFocus(jobKey)
+        return { ok: true }
+    }
+
 
     async function updateStatus(jobKey, next) {
         const entry = applications.get(jobKey)
@@ -493,13 +715,14 @@
         try {
             await apiPut(entry.serverId, "application", newData)
             applications.set(jobKey, { serverId: entry.serverId, data: newData })
-            changed()
+            // changed()
             toast("Changes saved", "ok")
             closeApplicationModal()
         } catch (err) {
             form.querySelector(".app-errors").textContent = friendly(err)
         } finally {
             pending.delete(jobKey)
+            changed()
             btn.disabled = false
             btn.textContent = "Save changes"
         }
@@ -525,7 +748,24 @@
     }, true)
 
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && applicationModal?.classList.contains("is-open")) closeApplicationModal()
+        if (!applicationModal?.classList.contains("is-open")) return
+        if (e.key === "Escape") { closeApplicationModal(); return }
+        if (e.key !== "Tab") return
+
+        const focusables = [...applicationModal.querySelectorAll(
+            'a[href], button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled)'
+        )].filter((el) => el.getClientRects().length > 0)
+        if (!focusables.length) { e.preventDefault(); return }
+
+        const first = focusables[0]
+        const last = focusables[focusables.length - 1]
+        if (!applicationModal.contains(document.activeElement)) {
+            e.preventDefault(); first.focus()
+        } else if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault(); last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault(); first.focus()
+        }
     })
 
 })();

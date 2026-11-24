@@ -89,6 +89,10 @@
 
                     ${renderStepper(data)}
                     <div class="application-actions">
+                        <button type="button" class="app-btn app-btn--danger" data-withdraw-job="${esc(data.jobKey)}"
+                        aria-label="Withdraw application to ${esc(data.title)}"
+                        ${Applications.isPending(data.jobKey) ? "disabled" : ""}>Withdraw</button>
+
                         <button type="button" class="app-btn" data-view-job="${esc(data.jobKey)}">View / edit</button>
                         ${Applications.nextStatuses(data.status).map((next) => `
                             <button type="button" class="app-btn" data-set-status="${next}" data-job-key="${esc(data.jobKey)}"
@@ -157,6 +161,8 @@
         const viewBtn = e.target.closest("[data-view-job]")
         if (viewBtn) Applications.openFromRecord(viewBtn.dataset.viewJob)
 
+        const withdrawBtn = e.target.closest("[data-withdraw-job]")
+        if (withdrawBtn) Applications.withdraw(withdrawBtn.dataset.withdrawJob)
     })
 
     const grid = document.getElementById("internshipGrid")
