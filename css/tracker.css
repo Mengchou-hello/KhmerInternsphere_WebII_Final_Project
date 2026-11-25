@@ -1,0 +1,243 @@
+:root {
+  --st-submitted-bg: #e0e9ff;  --st-submitted-fg: #1e3a8a;
+  --st-review-bg:    #fff3d6;  --st-review-fg:    #8a5300;
+  --st-accepted-bg:  #dcf5e5;  --st-accepted-fg:  #14653a;
+  --st-rejected-bg:  #fde2e0;  --st-rejected-fg:  #a12622;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.status-badge::before {            /* a dot; the text label is the real signal */
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.status-badge--submitted    { background: var(--st-submitted-bg); color: var(--st-submitted-fg); }
+.status-badge--under_review { background: var(--st-review-bg);    color: var(--st-review-fg); }
+.status-badge--accepted     { background: var(--st-accepted-bg);  color: var(--st-accepted-fg); }
+.status-badge--rejected     { background: var(--st-rejected-bg);  color: var(--st-rejected-fg); }
+
+/* on the internship card */
+.card-status { position: absolute; top: 12px; right: 12px; z-index: 1; }
+.internship-card:has(.card-status) .internship-card__top { padding-right: 104px; }
+
+/* in the modal title area */
+.detail-hero__text .status-badge { margin-top: 6px; }
+
+/* tracker list */
+.application-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.application-item {
+  display: grid; grid-template-columns: 48px 1fr auto; gap: 12px 14px; align-items: center;
+  padding: 16px; border: 1px solid #dbe4ff; border-radius: 14px; background: #fff;
+}
+.application-logo { width: 48px; height: 48px; object-fit: contain; border: 1px solid #e5e7eb; border-radius: 10px; }
+.application-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.app-stepper, .application-actions { grid-column: 1 / -1; }
+.application-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.app-btn {
+  padding: 8px 14px; border: 1px solid #111154; border-radius: 8px;
+  background: #fff; color: #111154; font-weight: 700; cursor: pointer;
+}
+.app-btn:hover:not(:disabled) { background: #111154; color: #fff; }
+.app-btn:disabled { opacity: .55; cursor: wait; }
+
+/* stepper */
+.app-stepper { display: flex; list-style: none; margin: 0; padding: 0; }
+.app-step {
+  position: relative; flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 4px; text-align: center; font-size: .78rem; color: #6b7280;
+}
+.app-step::before {                              /* the line from the previous dot */
+  content: ""; position: absolute; top: 9px; left: -50%; width: 100%; height: 3px; background: #d5dcf2;
+}
+.app-step:first-child::before { display: none; }
+.app-step__dot {
+  position: relative; z-index: 1; width: 20px; height: 20px; box-sizing: border-box;
+  border-radius: 50%; border: 3px solid #d5dcf2; background: #fff;
+}
+.app-step.is-done::before { background: #5d5d80; }
+.app-step.is-done .app-step__dot { background: #454572; border-color: #111154; }
+.app-step.is-current .app-step__label { font-weight: 700; color: #111154; }
+.app-step.is-accepted::before, .app-step.is-accepted .app-step__dot { background: var(--st-accepted-fg); border-color: var(--st-accepted-fg); }
+.app-step.is-rejected::before, .app-step.is-rejected .app-step__dot { background: var(--st-rejected-fg); border-color: var(--st-rejected-fg); }
+.app-step__date { font-size: .7rem; }
+
+@media (max-width: 600px) {
+  .application-item { grid-template-columns: 48px 1fr; }
+  .application-item .status-badge { grid-column: 1 / -1; justify-self: start; }
+}
+
+
+.app-progress {
+  flex: none;
+  padding: 18px 28px;
+  border-bottom: 1px solid #e3e8fb;
+  background: #fafbff;
+}
+.app-readonly-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff3d6;
+  color: #8a5300;
+  font-weight: 600;
+}
+.app-form input:disabled,
+.app-form textarea:disabled { background: #f4f6fb; color: #4a5068; cursor: not-allowed; }
+
+/* ---------- application form (matches contact form) ---------- */
+#application-modal {
+  --a-blue-darkest: var(--blue-darkest, #080838);
+  --a-blue-dark: var(--blue-dark, #111154);
+  --a-blue-mid: var(--blue-mid, #191970);
+  --a-blue-light: var(--blue-light, #292c7b);
+  --a-blue-pale: var(--blue-pale, #cadcfc);
+  --a-blue-xpale: var(--blue-xpale, #eef2ff);
+  --a-white: var(--white, #ffffff);
+  --a-border: var(--gray-border, #c5cde8);
+  --a-text: var(--gray-text, #4a5068);
+  --a-red: var(--red-req, #c0392b);
+}
+
+#application-modal .app-modal-title { margin: 0; font-size: 20px; color: var(--a-blue-dark); line-height: 1.3; }
+#application-modal .app-progress { margin: 16px 0; }
+#application-modal .app-original-link { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--a-blue-light); }
+
+#application-modal .app-form { margin-top: 16px; }
+
+#application-modal .app-note {
+  margin-bottom: 20px; padding: 10px 12px; font-size: 13px;
+  color: var(--a-text); background: var(--a-blue-xpale);
+  border-left: 3px solid var(--a-blue-light); border-radius: 6px;
+}
+
+/* fieldsets, legends, groups: same as the contact form */
+#application-modal fieldset {
+  border: 1px solid var(--a-border); border-radius: 8px;
+  padding: 20px; margin: 0 0 20px;
+}
+#application-modal legend {
+  font-size: 13px; font-weight: bold; color: var(--a-blue-light);
+  padding: 0 8px; background: var(--a-white);
+}
+#application-modal .form-group { margin-bottom: 14px; }
+#application-modal .form-group:last-child { margin-bottom: 0; }
+#application-modal .form-group label {
+  display: block; font-size: 13px; font-weight: bold;
+  color: var(--a-blue-dark); margin-bottom: 5px;
+}
+#application-modal .req { color: var(--a-red); }
+
+/* inputs */
+#application-modal input[type="text"],
+#application-modal input[type="email"],
+#application-modal input[type="tel"],
+#application-modal input[type="url"],
+#application-modal input[type="date"],
+#application-modal input[type="file"],
+#application-modal textarea {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--a-border); border-radius: 6px;
+  font-size: 14px; font-family: Arial, sans-serif;
+  background-color: var(--a-blue-xpale); color: var(--a-blue-darkest);
+  transition: border-color .2s, background-color .2s;
+}
+#application-modal input::placeholder,
+#application-modal textarea::placeholder { color: #8892c0; }
+#application-modal input[type="file"] { padding: 8px 10px; cursor: pointer; }
+#application-modal textarea { resize: vertical; min-height: 100px; }
+
+#application-modal input[type="text"]:focus,
+#application-modal input[type="email"]:focus,
+#application-modal input[type="tel"]:focus,
+#application-modal input[type="url"]:focus,
+#application-modal input[type="date"]:focus,
+#application-modal input[type="file"]:focus,
+#application-modal textarea:focus {
+  border-color: var(--a-blue-light); background-color: var(--a-white);
+  outline: none; box-shadow: 0 0 0 3px rgba(25, 25, 112, 0.15);
+}
+
+#application-modal input:disabled,
+#application-modal textarea:disabled {
+  background-color: var(--a-blue-xpale); opacity: .7; cursor: not-allowed;
+}
+
+/* validation */
+#application-modal .is-invalid,
+#application-modal .is-invalid:focus { border-color: var(--a-red); }
+#application-modal .is-invalid:focus { box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.18); }
+#application-modal .app-field-error { margin-top: 5px; font-size: 12px; font-weight: bold; color: var(--a-red); }
+#application-modal .app-field-error:empty,
+#application-modal .app-errors:empty { display: none; }
+#application-modal .app-errors {
+  padding: 10px 12px; margin-bottom: 10px; font-size: 13px; font-weight: bold;
+  color: var(--a-red); background: #fdf2f1; border: 1px solid var(--a-red); border-radius: 6px;
+}
+#application-modal .app-file-info,
+#application-modal .app-counter { margin-top: 5px; font-size: 12px; color: var(--a-text); }
+#application-modal .app-counter { text-align: right; }
+
+#application-modal .form-group--check { display: flex; align-items: center; gap: 10px; }
+#application-modal .form-group--check input { width: 18px; height: 18px; accent-color: var(--a-blue-mid); }
+#application-modal .form-group--check label { margin: 0; }
+
+#application-modal .app-readonly-note {
+  margin-bottom: 20px; padding: 10px 12px; font-size: 13px;
+  color: var(--a-text); background: var(--a-blue-xpale); border-radius: 6px;
+}
+
+/* buttons: sticky bar so they stay visible while the form scrolls */
+#application-modal .app-form__actions {
+  position: sticky; bottom: 0; z-index: 1;
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 14px 0 0; background: var(--a-white);
+  border-top: 2px solid var(--a-blue-xpale);
+}
+#application-modal .app-form__actions button {
+  padding: 11px 22px; font-size: 14px; font-weight: bold; font-family: Arial, sans-serif;
+  border-radius: 8px; cursor: pointer; border: 1px solid transparent;
+  transition: background-color .2s, transform .1s;
+}
+#application-modal .app-form__actions button:active { transform: scale(0.98); }
+
+#application-modal .app-submit-btn { background-color: var(--a-blue-mid); color: var(--a-white); }
+#application-modal .app-submit-btn:hover { background-color: var(--a-blue-dark); }
+
+#application-modal .app-cancel-btn { background: var(--a-white); color: var(--a-blue-dark); border-color: var(--a-border); }
+#application-modal .app-cancel-btn:hover { background: var(--a-blue-xpale); }
+
+#application-modal .app-withdraw-btn { margin-right: auto; background: var(--a-white); color: var(--a-red); border-color: var(--a-red); }
+#application-modal .app-withdraw-btn:hover { background: var(--a-red); color: var(--a-white); }
+
+#application-modal .app-form__actions button:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+@media (max-width: 520px) {
+  #application-modal fieldset { padding: 14px; }
+  #application-modal .app-form__actions { flex-direction: column-reverse; }
+  #application-modal .app-withdraw-btn { margin-right: 0; }
+}
+
+#application-modal .internship-modal__dialog {
+  max-height: 70vh;           /* fallback */
+  max-height: 70dvh;          /* better on phones with a moving address bar */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* make sure the inner wrapper isn't clipping or locking its own height */
+#application-modal #application-modal-content {
+  overflow: visible;
+  max-height: none;
+}
