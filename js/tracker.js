@@ -65,7 +65,7 @@
             '<div class="application-msg" role="status"> <span class="saved-spinner"></span> Loading your applications...</div>';
         } else if (state === "error") {
             body = 
-            `<div class="application-msg application-error" role="alert"><p>${esc(Applications.getErrorMsg())}</p><button type="button" class="application-retry retry-btn">Try again</button></div>`;
+            `<div class="application-msg application-error" role="alert"><p>${esc(Applications.getErrorMsg())}</p><button type="button" class="saved-retry saved-btn">Try again</button></div>`;
         } else if (list.length === 0) {
             body = 
             '<div class="application-msg">No applications yet. Open an internship and press Apply  </div>';

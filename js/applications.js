@@ -740,6 +740,19 @@
             openApplicationModal(window.getJobById?.(card.dataset.id))
             return
         }    
+
+        const savedApply = e.target.closest(".saved-btn--apply")
+        if (savedApply) {
+            const actions = savedApply.closest(".saved-actions")
+            const id = actions?.querySelector("[data-view-id]")?.dataset.viewId
+                    || actions?.querySelector("[data-remove-id]")?.dataset.removeId
+            const entry = id != null ? window.Saved?.getJob?.(String(id)) : null
+            const job = entry?.data ?? entry
+            if (!job) return                                         // fall back to the original link
+            e.preventDefault()
+            openApplicationModal({ ...job, id: job.id ?? job.jobId ?? id, origin: job.origin })
+            return
+        }
         // apply button inside detail modal
         if (e.target.closest(".detail-apply")) {
             e.preventDefault()

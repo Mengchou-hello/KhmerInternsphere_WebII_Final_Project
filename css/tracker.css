@@ -66,8 +66,8 @@
   position: relative; z-index: 1; width: 20px; height: 20px; box-sizing: border-box;
   border-radius: 50%; border: 3px solid #d5dcf2; background: #fff;
 }
-.app-step.is-done::before { background: #111154; }
-.app-step.is-done .app-step__dot { background: #111154; border-color: #111154; }
+.app-step.is-done::before { background: #5d5d80; }
+.app-step.is-done .app-step__dot { background: #454572; border-color: #111154; }
 .app-step.is-current .app-step__label { font-weight: 700; color: #111154; }
 .app-step.is-accepted::before, .app-step.is-accepted .app-step__dot { background: var(--st-accepted-fg); border-color: var(--st-accepted-fg); }
 .app-step.is-rejected::before, .app-step.is-rejected .app-step__dot { background: var(--st-rejected-fg); border-color: var(--st-rejected-fg); }

@@ -636,6 +636,7 @@
   window.Saved = {
     mountModalButton,
     isSaved: (id) => saved.has(String(id)),
-    reload: loadSaved,
+    getJob: (id) => saved.get(id),
+    reload: loadSaved,   
   };
 })();
