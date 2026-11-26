@@ -1,7 +1,3 @@
-/* latest.js - "Latest Internships" on the home page.
-   Cards use the same markup as the Internships page (card.js): bullet-style info, plus Save and Apply
-   icon buttons. Clicking a card (or "View details") opens our own detail popup, never the external site.
-   Load AFTER card.js. */
 (() => {
   'use strict';
   const box = document.getElementById('latest-list');
