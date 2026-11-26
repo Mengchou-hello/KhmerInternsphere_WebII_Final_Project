@@ -1,17 +1,3 @@
-/* detail-map.js - Member 2
-   Internship detail modal + Nominatim geocoding + Leaflet map.
-
-   Load order: config.js, card.js, Leaflet, (internships.js or latest.js), detail-map.js, saved.js
-
-   Public API
-     openDetailModal(job)   open the modal for one normalized job
-     closeDetailModal()     close it
-     geocode(address)       Promise -> { lat, lon, label } or null
-
-   Hooks for teammates
-     #modal-save-slot       Member 3 mounts the Save button (listens to the "modal:open" event)
-     #modal-apply-slot      Member 4 can replace the Apply link with the in-app application button
-     "modal:open" event     document.dispatchEvent, detail: { job } */
 (() => {
   "use strict";
   if (window.__kisDetailLoaded) return; // never attach the listeners twice
