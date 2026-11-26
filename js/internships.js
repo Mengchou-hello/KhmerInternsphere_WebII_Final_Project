@@ -1,6 +1,3 @@
-/* Member 1: live internship listings shared with detail, saved, and home features.
-   Load AFTER card.js. Supports deep links like internships.html?job=local-3&source=cambodia
-   (used by "View details" in the Saved list and on the home page). */
 (() => {
   'use strict';
 
