@@ -1,4 +1,3 @@
-/* Member 1: companies are derived only from the live Remotive internship feed. */
 (() => {
   'use strict';
   const container = document.getElementById('company-list');
