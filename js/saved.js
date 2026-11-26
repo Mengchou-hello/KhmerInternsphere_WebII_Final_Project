@@ -1,20 +1,3 @@
-/* saved.js - Member 3
-   Bookmarks: Save / Unsave buttons on cards and in the modal, plus the
-   "Saved Internships" list inside #saved-section.
-   Load order: config.js, api-client.js, card.js, (internships.js), detail-map.js, saved.js
-
-   Storage: the shared restful-api.dev list is the ONLY place bookmarks live. Every page
-   (home.html and internships.html) loads this same file, so both read and write the same records.
-     - GET  (apiGet('saved'))   on every page load  -> restores Saved buttons + the Saved list
-     - POST (apiPost('saved'))  on Save              -> record name is "KIS-saved" (team prefix added by api-client)
-     - DELETE (apiDelete(id))   on Unsave            -> uses the SERVER record id, never the internship id
-   If the server cannot be reached the button is NOT marked Saved and a friendly message is shown,
-   so the screen never claims something is saved that is not. (Older versions fell back to
-   localStorage, which is why bookmarks vanished after a refresh; anything an old version left in
-   localStorage is uploaded once, then removed.)
-
-   Removing a saved internship (card, modal or Saved list) asks for confirmation first;
-   "View details" opens our own detail view (Apply is a separate button). */
 (() => {
   "use strict";
   if (window.__kisSavedLoaded) return; // never attach the listeners / observer twice

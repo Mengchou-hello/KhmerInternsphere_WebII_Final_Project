@@ -1,6 +1,4 @@
-/* config.js - Member 3
-   ALL API URLs live here. No other file may hardcode them.
-   Load this file BEFORE every other script. */
+/* ALL API URLs live here. No other file may hardcode them. */
 const CONFIG = Object.freeze({
   REMOTIVE_URL: 'https://remotive.com/api/remote-jobs',
   NOMINATIM_URL: 'https://nominatim.openstreetmap.org/search',

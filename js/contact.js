@@ -1,11 +1,4 @@
-/* contact.js - Member 2
-   Client-side validation for the contact form (there is no email backend).
-
-   - Required: student name, email, phone, message
-   - Email format, Cambodian phone format (+855... or 0...)
-   - Company email / phone are optional, but must be valid when filled in
-   - Inline errors on blur and on input; on submit EVERY invalid field shows its error
-   - Valid submit: success message and form reset */
+/* Client-side validation for the contact form (there is no email backend). */
 (() => {
   "use strict";
   const form = document.getElementById("contact-form");

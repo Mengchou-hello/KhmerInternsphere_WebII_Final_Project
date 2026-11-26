@@ -1,6 +1,4 @@
-/* card.js - shared SVG icons + internship card markup.
-   Used by internships.js, latest.js (home), detail-map.js and saved.js.
-   Load AFTER config.js and BEFORE detail-map.js / saved.js. */
+/* card.js - shared SVG icons + internship card markup. */
 (() => {
   'use strict';
 
