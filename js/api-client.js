@@ -1,24 +1,3 @@
-/* api-client.js - Member 3
-   Shared helpers for restful-api.dev. Load AFTER config.js.
-
-   HOW TO USE (Member 4, read this):
-     const apps = await apiGet('application');          // list: only our team's records
-     const rec  = await apiPost('application', {...});  // create -> returns { id, name, data }
-     await apiPut(rec.id, 'application', {...newData}); // update (send the full data object)
-     await apiDelete(rec.id);                           // delete
-   'type' is a short word such as 'saved' or 'application'.
-   The team prefix is added for you (name becomes "KIS-application").
-   Each record looks like: { id, name, data: {...your data...} }
-   Every helper throws an Error with a readable message, so wrap calls in try/catch.
-
-   INTERNSHIP FEED:
-     const { jobs, notice } = await getInternshipFeed();                  // Cambodia (default)
-     const { jobs, notice } = await getInternshipFeed({ source: 'remote' }); // Remotive, international
-   Cambodia = data/internships.json (curated, each entry links to its original posting).
-   Remotive is only requested when source is 'remote'. It caches the answer for 6 hours,
-   because Remotive asks for at most 4 fetches a day and blocks more than 2 requests a minute.
-   Remember to credit Remotive on the page. */
-
 async function apiRequest(url, options = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 12000);
